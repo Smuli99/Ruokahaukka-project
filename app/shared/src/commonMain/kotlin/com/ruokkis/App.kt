@@ -24,12 +24,7 @@ import ruokkis.app.shared.generated.resources.compose_multiplatform
 @Preview
 fun App() {
     MaterialTheme {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("Hello World!")
-        }
+        MainView()
 
     }
 }
