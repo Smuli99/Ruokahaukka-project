@@ -22,6 +22,6 @@ data class DayMenu(
 @Serializable
 data class Meal(
     @SerialName("Name") val name: String,
-    @SerialName("Price") val price: String,
+    @SerialName("Price") val price: String? = null,
     @SerialName("Components") val dishes: List<String> = emptyList()
 )
