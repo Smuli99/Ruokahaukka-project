@@ -1,9 +1,12 @@
 package com.ruokkis
 
 import com.ruokkis.service.PiatoService
+import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.runBlocking
@@ -26,9 +29,23 @@ fun main() {
 }
 
 fun Application.module() {
+    val piatoService = PiatoService()
+
+
+    install(ContentNegotiation) {
+        json()
+    }
+
     routing {
         get("/") {
             call.respondText(sayHello("Ktor"))
+        }
+        get("/piato") {
+            try {
+                call.respond(piatoService.fetchMenu())
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest)
+            }
         }
     }
 }
