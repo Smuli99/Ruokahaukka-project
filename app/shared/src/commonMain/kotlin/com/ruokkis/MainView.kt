@@ -59,6 +59,9 @@ fun HomePage() {
             }) {
                 Text("Get Restaurant")
             }
+            if (piato != null) {
+                Text(piato.toString())
+            }
         }
     }
 
