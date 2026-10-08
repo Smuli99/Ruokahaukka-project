@@ -15,8 +15,10 @@ fun createHttpClient() = HttpClient {
         })
     }
 
+    val serverHost = getServerHost()
+
     defaultRequest {
-        host = serverHost()
-        port = 8080
+        host = serverHost.host
+        port = serverHost.port
     }
 }

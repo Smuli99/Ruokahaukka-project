@@ -12,18 +12,6 @@ import io.ktor.server.routing.*
 import kotlinx.coroutines.runBlocking
 
 fun main() {
-//    Väliaikainen ratkaisu poistetaan, kun datan haku todettu toimivaksi
-    runBlocking {
-        val menu = PiatoService().fetchMenu()
-        println("Menu: $menu")
-        println(menu.restaurantName)
-        menu.days.forEach { day ->
-            println("${day.date.take(10)} (${day.lunchTime})")
-            day.menu.filter { it.dishes.isNotEmpty() }.forEach { meal ->
-                println(" ${meal.name}: ${meal.dishes}")
-            }
-        }
-    }
     embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
 }
