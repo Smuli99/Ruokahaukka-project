@@ -6,18 +6,25 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -39,6 +46,9 @@ import org.jetbrains.compose.resources.painterResource
 
 
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.layout.ContentScale
 import ruokkis.app.shared.generated.resources.*
 
@@ -117,6 +127,13 @@ val testausTeksti = "\"Date\": \"2026-10-08T00:00:00+00:00\",\n" +
 @Composable
 @Preview
 fun HomePage() {
+  /*  (MaterialTheme(   colorScheme = AppColors){
+
+
+    }*/
+
+
+
     Scaffold (
         topBar = {
             TopAppBar (
@@ -153,7 +170,7 @@ fun HomePage() {
                     }
 
                     Button(
-                        onClick = { /**/}
+                        onClick = { /**/} //TODO: Napista painamalla avaa koti sivun / palaa siihen
                     ){
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
@@ -169,7 +186,7 @@ fun HomePage() {
 
 
                     }
-                    Button(onClick = {/**/}
+                    Button(onClick = {/**/} //TODO: Napista painamalla siirtyy lempparit sivustolle
                     ){
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
@@ -186,44 +203,68 @@ fun HomePage() {
 
                     }
 
-                    /*
-                                        Text(
-                                            modifier = Modifier
-                                                .fillMaxWidth(),
-                                            textAlign = TextAlign.Center,
-                                            text = "Bottom app bar",
-                                        )*/
                 }
 
 
             }
 
         },
+
+
     ){ innerPadding ->
         Column(
             modifier = Modifier
-                .padding(innerPadding),
+                .padding(innerPadding).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
+
         ) {
             Card(
-
+                // Nää vois ehkä siirtää omaan tiedostoonsa ja vaan kutsua täältä
+                colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
                 modifier = Modifier
-                    .padding(24.dp)
-                    .size(width = 240.dp, height = 100.dp)
+                    .padding(24.dp),
+
+                    //.size(width = 300.dp, height = 100.dp)
             ){
-                Row(
+                FlowRow(
                     modifier = Modifier
                         .padding(10.dp)
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp),
+                    maxItemsInEachRow = 4
+
+
 
                 ){
+                    var selected = true //TODO: Muuta kaikki Filltered chip, oikea kuva, laita käyttämään samaa pohjaa
+                    //var selected by remember {mutableStateOf(false)}
+                   FilterChip(
 
-                 /*   FilterChip(
-                        onClick = { selected = !selected},
+                        onClick = { selected = false},
                         label = {Text("Ruokaa")},
                         selected = selected,
-                    )*/
+                       leadingIcon = {
+                           if (selected) {
+                               Image(
+                                   painter = painterResource(Res.drawable.heart),
+                                   contentDescription = "Heart",
+                                   modifier = Modifier.size(24.dp),
+                                   contentScale = ContentScale.Fit
+                               )
+
+                           } else {
+
+                               Image(
+                                   painter = painterResource(Res.drawable.home),
+                                   contentDescription = "Home",
+                                   modifier = Modifier.size(24.dp),
+                                   contentScale = ContentScale.Fit
+                               )
+                           }
+                       }
+                    )
 
                     AssistChip(
                         onClick = {},
@@ -234,52 +275,91 @@ fun HomePage() {
                         onClick = {},
                         label = {Text("Moikka")}
                     )
+                    AssistChip(
+                        onClick = {},
+                        label = {Text("Moikka")}
+                    )
+                    AssistChip(
+                        onClick = {},
+                        label = {Text("Moikka")}
+                    )
+                    AssistChip(
+                        onClick = {},
+                        label = {Text("Moikka")}
+                    )
                 }
             }
-            Text(
-                modifier = Modifier.padding(8.dp),
-                text =
-                    """
-                    This is an example of a scaffold. It uses the Scaffold composable's parameters to create a screen with a simple top app bar, bottom app bar, and floating action button.
+            var expanded = true //TODO: Järkevästi, ei näin paljon toistoa, datan lisääminen / hakeminen
+            Box(
+                modifier = Modifier.align(Alignment.Start)
+                .padding(10.dp)
+            ){
+                Button(onClick = {expanded = !expanded}){
+                    Text("Päivä")///moi
+                }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false}
+                ) {
+                    DropdownMenuItem(
+                        text= {Text("Ma")},
+                        onClick = {/**/}
+                    )
+                    DropdownMenuItem(
+                        text= {Text("Ti")},
+                        onClick = {/**/}
+                    )
+                    DropdownMenuItem(
+                        text= {Text("Ke")},
+                        onClick = {/**/}
+                    )
+                    DropdownMenuItem(
+                        text= {Text("To")},
+                        onClick = {/**/}
+                    )
+                    DropdownMenuItem(
+                        text= {Text("Pe")},
+                        onClick = {/**/}
+                    )
+                }
 
-                    It also contains some basic inner content, such as this text.
+            }
+            HorizontalDivider(thickness = 2.dp)
 
-                    You have pressed the floating action buttontimes.
-                """.trimIndent(),
-            )
+
+            Card(
+                colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
+                modifier = Modifier
+                    .padding(10.dp)
+                .size(width = 300.dp, height = 100.dp),
+            ){
+                Text("NamNAm ruokaa")
+            }
+            Card(
+                colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
+                modifier = Modifier
+                    .padding(10.dp)
+                    .size(width = 300.dp, height = 100.dp)
+            ){
+                Text("NamNAm ruokaa")
+            }
+            Card(
+                colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
+                modifier = Modifier
+                    .padding(10.dp)
+                    .size(width = 300.dp, height = 100.dp)
+            ){
+                Text("NamNAm ruokaa")
+            }
+
+
 
         }
     }
 
-} /*{
-    MaterialTheme {
-        val restaurantApi = remember { FoodListApi(createHttpClient()) }
-        var piato by remember { mutableStateOf<PiatoResponse?>(null) }
-        val scope = rememberCoroutineScope()
+}
 
-        Column (
-            modifier = Modifier
-                .background(Color(0xFFfdd0a2))
-                .safeContentPadding()
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        )
-        {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, Color.Gray)
-                    .padding(16.dp, 200.dp),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                Text(
-                    text = "Ruokkis",
-                    modifier = Modifier.padding(20.dp, 1.dp)
-                    )
-            }
-
-
-
+/*
             Button(onClick = {
                 scope.launch {
                     piato = restaurantApi.getRestaurant()
