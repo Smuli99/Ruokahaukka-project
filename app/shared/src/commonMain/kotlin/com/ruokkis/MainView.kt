@@ -50,6 +50,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.layout.ContentScale
+import com.ruokkis.components.TopBar
 import ruokkis.app.shared.generated.resources.*
 
 val testausTeksti = "\"Date\": \"2026-10-08T00:00:00+00:00\",\n" +
@@ -136,16 +137,7 @@ fun HomePage() {
 
     Scaffold (
         topBar = {
-            TopAppBar (
-                colors = topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-
-                title = {
-                    Text("Ruokkis")
-                }
-            )
+           TopBar()
         },
 
 
@@ -352,7 +344,21 @@ fun HomePage() {
                 Text("NamNAm ruokaa")
             }
 
+            /*
+            Button(onClick = {
+                scope.launch {
+                    piato = restaurantApi.getRestaurant()
+                }
+            }) {
+                Text("Get Restaurant")
+            }
+            if (piato != null) {
+                Text(piato.toString())
+            }
+        }
+    }
 
+} */
 
         }
     }
