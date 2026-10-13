@@ -51,6 +51,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.layout.ContentScale
 import com.ruokkis.components.BottomBar
+import com.ruokkis.components.DayChooserBox
 import com.ruokkis.components.TopBar
 import ruokkis.app.shared.generated.resources.*
 
@@ -185,7 +186,7 @@ fun HomePage() {
                            if (selected) {
                                Image(
                                    painter = painterResource(Res.drawable.heart),
-                                   contentDescription = "Heart",
+                                   contentDescription = "Heart", // huom. pitää muokkaa
                                    modifier = Modifier.size(24.dp),
                                    contentScale = ContentScale.Fit
                                )
@@ -194,7 +195,7 @@ fun HomePage() {
 
                                Image(
                                    painter = painterResource(Res.drawable.home),
-                                   contentDescription = "Home",
+                                   contentDescription = "Home", // huom. pitää muokkaa
                                    modifier = Modifier.size(24.dp),
                                    contentScale = ContentScale.Fit
                                )
@@ -225,41 +226,9 @@ fun HomePage() {
                     )
                 }
             }
-            var expanded = true //TODO: Järkevästi, ei näin paljon toistoa, datan lisääminen / hakeminen
-            Box(
-                modifier = Modifier.align(Alignment.Start)
-                .padding(10.dp)
-            ){
-                Button(onClick = {expanded = !expanded}){
-                    Text("Päivä")///moi
-                }
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false}
-                ) {
-                    DropdownMenuItem(
-                        text= {Text("Ma")},
-                        onClick = {/**/}
-                    )
-                    DropdownMenuItem(
-                        text= {Text("Ti")},
-                        onClick = {/**/}
-                    )
-                    DropdownMenuItem(
-                        text= {Text("Ke")},
-                        onClick = {/**/}
-                    )
-                    DropdownMenuItem(
-                        text= {Text("To")},
-                        onClick = {/**/}
-                    )
-                    DropdownMenuItem(
-                        text= {Text("Pe")},
-                        onClick = {/**/}
-                    )
-                }
 
-            }
+            DayChooserBox()
+
             HorizontalDivider(thickness = 2.dp)
 
 
