@@ -50,6 +50,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.layout.ContentScale
+import com.ruokkis.components.BottomBar
 import com.ruokkis.components.TopBar
 import ruokkis.app.shared.generated.resources.*
 
@@ -142,64 +143,7 @@ fun HomePage() {
 
 
         bottomBar = {
-            BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.primary,
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-
-
-
-
-                    Button(
-                        onClick = { /**/}
-                    ){
-                        Text("upeeta")
-                    }
-
-                    Button(
-                        onClick = { /**/} //TODO: Napista painamalla avaa koti sivun / palaa siihen
-                    ){
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ){
-                            Image(
-                                painter = painterResource(Res.drawable.home),
-                                contentDescription = "Home icon",
-                                modifier = Modifier.size(24.dp),
-                                contentScale = ContentScale.Fit
-                            )
-                            Text("Koti")
-                        }
-
-
-                    }
-                    Button(onClick = {/**/} //TODO: Napista painamalla siirtyy lempparit sivustolle
-                    ){
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ){
-                            Image(
-                                painter = painterResource(Res.drawable.heart),
-                                contentDescription = "Heart",
-                                modifier = Modifier.size(24.dp),
-                                contentScale = ContentScale.Fit
-                            )
-                            Text("Lempparit")
-                        }
-
-
-                    }
-
-                }
-
-
-            }
-
+            BottomBar()
         },
 
 
