@@ -53,6 +53,7 @@ import androidx.compose.ui.layout.ContentScale
 import com.ruokkis.components.BottomBar
 import com.ruokkis.components.DayChooserBox
 import com.ruokkis.components.FilterTagBox
+import com.ruokkis.components.FoodCards
 import com.ruokkis.components.TopBar
 import ruokkis.app.shared.generated.resources.*
 
@@ -137,7 +138,6 @@ fun HomePage() {
     }*/
 
 
-
     Scaffold (
         topBar = {
            TopBar()
@@ -159,36 +159,12 @@ fun HomePage() {
         ) {
             FilterTagBox()
 
-
             DayChooserBox()
 
             HorizontalDivider(thickness = 2.dp)
 
+            FoodCards()
 
-            Card(
-                colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
-                modifier = Modifier
-                    .padding(10.dp)
-                .size(width = 300.dp, height = 100.dp),
-            ){
-                Text("NamNAm ruokaa")
-            }
-            Card(
-                colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
-                modifier = Modifier
-                    .padding(10.dp)
-                    .size(width = 300.dp, height = 100.dp)
-            ){
-                Text("NamNAm ruokaa")
-            }
-            Card(
-                colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
-                modifier = Modifier
-                    .padding(10.dp)
-                    .size(width = 300.dp, height = 100.dp)
-            ){
-                Text("NamNAm ruokaa")
-            }
 
             /*
             Button(onClick = {
@@ -210,19 +186,3 @@ fun HomePage() {
     }
 
 }
-
-/*
-            Button(onClick = {
-                scope.launch {
-                    piato = restaurantApi.getRestaurant()
-                }
-            }) {
-                Text("Get Restaurant")
-            }
-            if (piato != null) {
-                Text(piato.toString())
-            }
-        }
-    }
-
-} */
