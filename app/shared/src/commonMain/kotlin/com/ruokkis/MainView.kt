@@ -52,6 +52,7 @@ import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.layout.ContentScale
 import com.ruokkis.components.BottomBar
 import com.ruokkis.components.DayChooserBox
+import com.ruokkis.components.FilterTagBox
 import com.ruokkis.components.TopBar
 import ruokkis.app.shared.generated.resources.*
 
@@ -156,76 +157,8 @@ fun HomePage() {
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
-            Card(
-                // Nää vois ehkä siirtää omaan tiedostoonsa ja vaan kutsua täältä
-                colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
-                modifier = Modifier
-                    .padding(24.dp),
+            FilterTagBox()
 
-                    //.size(width = 300.dp, height = 100.dp)
-            ){
-                FlowRow(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    verticalArrangement = Arrangement.spacedBy(5.dp),
-                    maxItemsInEachRow = 4
-
-
-
-                ){
-                    var selected = true //TODO: Muuta kaikki Filltered chip, oikea kuva, laita käyttämään samaa pohjaa
-                    //var selected by remember {mutableStateOf(false)}
-                   FilterChip(
-
-                        onClick = { selected = false},
-                        label = {Text("Ruokaa")},
-                        selected = selected,
-                       leadingIcon = {
-                           if (selected) {
-                               Image(
-                                   painter = painterResource(Res.drawable.heart),
-                                   contentDescription = "Heart", // huom. pitää muokkaa
-                                   modifier = Modifier.size(24.dp),
-                                   contentScale = ContentScale.Fit
-                               )
-
-                           } else {
-
-                               Image(
-                                   painter = painterResource(Res.drawable.home),
-                                   contentDescription = "Home", // huom. pitää muokkaa
-                                   modifier = Modifier.size(24.dp),
-                                   contentScale = ContentScale.Fit
-                               )
-                           }
-                       }
-                    )
-
-                    AssistChip(
-                        onClick = {},
-                        label = {Text("Allergia")}
-                    )
-
-                    AssistChip(
-                        onClick = {},
-                        label = {Text("Moikka")}
-                    )
-                    AssistChip(
-                        onClick = {},
-                        label = {Text("Moikka")}
-                    )
-                    AssistChip(
-                        onClick = {},
-                        label = {Text("Moikka")}
-                    )
-                    AssistChip(
-                        onClick = {},
-                        label = {Text("Moikka")}
-                    )
-                }
-            }
 
             DayChooserBox()
 
