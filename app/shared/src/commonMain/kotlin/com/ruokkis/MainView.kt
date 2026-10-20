@@ -11,9 +11,12 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,13 +39,20 @@ import kotlinx.coroutines.launch
 @Preview
 fun HomePage() {
 
-    val httpClient = createHttpClient()
-    val foodListApi = remember { FoodListApi(httpClient) }
-    val scope = rememberCoroutineScope()
-    val piato = remember {mutableStateOf<RestaurantMenu?>(null)}
+    // remember pitää käyttää muuttuja.value, by ohittaa sen
+    val foodListApi = remember { FoodListApi(createHttpClient()) }
+    var menu by remember { mutableStateOf<RestaurantMenu?>(null) }
+    var showMenu by remember { mutableStateOf(false) }
 
-
-
+    /**
+     * Ajetaan vain kerran sovelluksen avatessa
+     * param: Unit -> ei ajeta uudestaan, voi lisätä jonkin parametrin,
+     * minkä avulla data haetaan uudestaan, esim viikon vaihtuessa niin
+     * saadaan aina oikea menu
+     */
+    LaunchedEffect(Unit) {
+        menu = foodListApi.getWeek("piato")
+    }
 
     Scaffold (
         topBar = {
@@ -74,22 +84,23 @@ fun HomePage() {
 
 
 
-            Button(onClick = {
-                scope.launch {
-                    piato.value = foodListApi.getWeek("piato")
-                }
-            }) {
-                Text("Get Restaurant")
+            Button(onClick = { showMenu = !showMenu }) {
+                Text(if (showMenu) "Hide menu" else "Show menu")
             }
-            piato?.let { menu ->
-                Text(menu.toString())
+
+            if (showMenu) {
+                menu?.days?.forEach { day ->
+                    Text(day.date)
+                    day.meals.forEach { meal ->
+                        var price = meal.prices
+                        if (price == null) price = "Price not available"
+                        Text(price)
+                        meal.dishes.forEach { dish ->
+                            Text(dish)
+                        }
+                    }
+                }
             }
         }
-
-
-
-
-
     }
-
 }
