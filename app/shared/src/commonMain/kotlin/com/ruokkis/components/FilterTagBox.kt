@@ -48,6 +48,8 @@ fun FilterTagBox(){
         ){
             var selected = true //TODO: Muuta kaikki Filltered chip, oikea kuva, laita käyttämään samaa pohjaa
             //var selected by remember {mutableStateOf(false)}
+            //dokumentoi
+
             FilterChip(
 
                 onClick = { selected = false},

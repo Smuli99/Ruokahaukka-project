@@ -1,61 +1,33 @@
 package com.ruokkis
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
-
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
-
-
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.ruokkis.model.PiatoResponse
-import com.ruokkis.network.FoodListApi
-import com.ruokkis.network.createHttpClient
-import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.painterResource
-
-
-import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.BlendMode.Companion.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.ruokkis.components.BottomBar
 import com.ruokkis.components.DayChooserBox
 import com.ruokkis.components.FilterTagBox
-import com.ruokkis.components.FoodCards
+import com.ruokkis.components.RestaurantCards
 import com.ruokkis.components.TopBar
-import ruokkis.app.shared.generated.resources.*
+import com.ruokkis.model.RestaurantMenu
+import com.ruokkis.network.FoodListApi
+import com.ruokkis.network.createHttpClient
+import kotlinx.coroutines.launch
+
 
 val testausTeksti = "\"Date\": \"2026-10-08T00:00:00+00:00\",\n" +
         "      \"LunchTime\": \"10:30–16:30\",\n" +
@@ -127,13 +99,21 @@ val testausTeksti = "\"Date\": \"2026-10-08T00:00:00+00:00\",\n" +
         "      ]\n" +
         "    }"
 
+
+//UI elementit how to.tm
 //https://developer.android.com/develop/ui/compose/components
 
 @Composable
 @Preview
 fun HomePage() {
-  /*  (MaterialTheme(   colorScheme = AppColors){
 
+    val httpClient = createHttpClient()
+    val foodListApi = remember { FoodListApi(httpClient) }
+    val scope = rememberCoroutineScope()
+    val piato = remember {mutableStateOf<RestaurantMenu?>(null)}
+
+  /*  (MaterialTheme(   colorScheme = AppColors){
+        //poista kun toteutettu
 
     }*/
 
@@ -149,7 +129,7 @@ fun HomePage() {
         },
 
 
-    ){ innerPadding ->
+    ){ innerPadding -> //Miksi?
         Column(
             modifier = Modifier
                 .padding(innerPadding).verticalScroll(rememberScrollState()),
@@ -157,32 +137,33 @@ fun HomePage() {
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
-            FilterTagBox()
 
-            DayChooserBox()
+            FilterTagBox() //TODO dynaaminen toteutus
+
+            DayChooserBox() //TODO Riviksi, lisää la + su
 
             HorizontalDivider(thickness = 2.dp)
 
-            FoodCards()
+            RestaurantCards() //TODO Tee pohja, Hae tiedot
 
 
-            /*
+
             Button(onClick = {
                 scope.launch {
-                    piato = restaurantApi.getRestaurant()
+                    piato.value = foodListApi.getWeek("piato")
                 }
             }) {
                 Text("Get Restaurant")
             }
-            if (piato != null) {
-                Text(piato.toString())
+            piato?.let { menu ->
+                Text(menu.toString())
             }
         }
-    }
 
-} */
 
-        }
+
+
+
     }
 
 }

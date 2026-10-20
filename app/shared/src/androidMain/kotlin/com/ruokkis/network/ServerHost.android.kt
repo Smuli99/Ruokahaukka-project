@@ -6,7 +6,7 @@ class AndroidServerHost: ServerHost {
     override val port: Int = 8080
 //    override val host: String = "localhost"
     override val host: String =
-        if (isEmulator()) "localhost" else "10.3.22.46"
+        if (isEmulator()) "10.0.2.2" else "10.3.22.46"
 
     private fun isEmulator(): Boolean =
                 Build.HARDWARE.contains("goldfish") ||

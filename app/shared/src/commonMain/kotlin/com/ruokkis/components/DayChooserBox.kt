@@ -16,6 +16,8 @@ import androidx.compose.runtime.* // lisätty
 @Preview
 fun DayChooserBox() {
     var expanded by remember {mutableStateOf(false)} //lisätty verrattuna MainViewissä olleeseen
+    //Ilman dropdown menua? + Koko viikko (default)
+    // Koko viikko radio button (exlusive), päiviä voi valita monta
 
     Box(
         modifier = Modifier

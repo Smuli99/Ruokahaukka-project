@@ -14,10 +14,12 @@ fun TopBar() {
         colors = topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.primary,
+
         ),
 
         title = {
-            Text("Ruokkis")
+
+            Text("Ruokkis")//Keskitä?
         }
     )
 }

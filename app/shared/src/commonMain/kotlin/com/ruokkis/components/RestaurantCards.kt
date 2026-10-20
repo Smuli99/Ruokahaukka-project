@@ -13,9 +13,13 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 @Preview
-fun FoodCards(){
+fun RestaurantCards(){
 
-    //TODO: Tee joku pohja, ettei tartte toistaa.
+    //MUUTA
+    //TODO: Tee joku pohja, ettei tartte toistaa. (dynaaminen)
+    // HAe oikeesti teksti
+
+
     Card(
         colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
         modifier = Modifier
