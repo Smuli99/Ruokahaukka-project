@@ -29,77 +29,6 @@ import com.ruokkis.network.createHttpClient
 import kotlinx.coroutines.launch
 
 
-val testausTeksti = "\"Date\": \"2026-10-08T00:00:00+00:00\",\n" +
-        "      \"LunchTime\": \"10:30–16:30\",\n" +
-        "      \"SetMenus\": [\n" +
-        "        {\n" +
-        "          \"SortOrder\": 6,\n" +
-        "          \"Name\": \"LOUNAS\",\n" +
-        "          \"Price\": null,\n" +
-        "          \"Components\": [\n" +
-        "            \"Falafelpihvejä (G, ILM, L, M, Veg)\",\n" +
-        "            \"Tzatsikia (*, A, G, ILM, L, M, Veg)\"\n" +
-        "          ]\n" +
-        "        },\n" +
-        "        {\n" +
-        "          \"SortOrder\": 17,\n" +
-        "          \"Name\": \"LOUNAS\",\n" +
-        "          \"Price\": null,\n" +
-        "          \"Components\": []\n" +
-        "        },\n" +
-        "        {\n" +
-        "          \"SortOrder\": 24,\n" +
-        "          \"Name\": \"LOUNAS\",\n" +
-        "          \"Price\": null,\n" +
-        "          \"Components\": [\n" +
-        "            \"Chili-Fetapatonki - Limited edition (A, L)\",\n" +
-        "            \"Kana-savupalvipatonki - Limited edition (A, L, M)\"\n" +
-        "          ]\n" +
-        "        },\n" +
-        "        {\n" +
-        "          \"SortOrder\": 26,\n" +
-        "          \"Name\": \"LOUNAS\",\n" +
-        "          \"Price\": null,\n" +
-        "          \"Components\": [\n" +
-        "            \"Perinteistä makkarakastiketta (*, A, G, L, M)\"\n" +
-        "          ]\n" +
-        "        },\n" +
-        "        {\n" +
-        "          \"SortOrder\": 28,\n" +
-        "          \"Name\": \"KEITTOLOUNAS\",\n" +
-        "          \"Price\": null,\n" +
-        "          \"Components\": [\n" +
-        "            \"Hernekeittoa (*, A, G, ILM, L, M)\"\n" +
-        "          ]\n" +
-        "        },\n" +
-        "        {\n" +
-        "          \"SortOrder\": 29,\n" +
-        "          \"Name\": \"FROM THE TABLE\",\n" +
-        "          \"Price\": null,\n" +
-        "          \"Components\": []\n" +
-        "        },\n" +
-        "        {\n" +
-        "          \"SortOrder\": 31,\n" +
-        "          \"Name\": \"FROM THE GRILL\",\n" +
-        "          \"Price\": null,\n" +
-        "          \"Components\": [\n" +
-        "            \"Briossi BRG pekonilla ()\",\n" +
-        "            \"Ranskalaisia perunoita ()\"\n" +
-        "          ]\n" +
-        "        },\n" +
-        "        {\n" +
-        "          \"SortOrder\": 32,\n" +
-        "          \"Name\": \"JÄLKIRUOKA\",\n" +
-        "          \"Price\": null,\n" +
-        "          \"Components\": [\n" +
-        "            \"Meidän keittiön pannukakkua (A, L)\",\n" +
-        "            \"Vaniljakermavaahtoa (A, G, L)\"\n" +
-        "          ]\n" +
-        "        }\n" +
-        "      ]\n" +
-        "    }"
-
-
 //UI elementit how to.tm
 //https://developer.android.com/develop/ui/compose/components
 
@@ -112,10 +41,7 @@ fun HomePage() {
     val scope = rememberCoroutineScope()
     val piato = remember {mutableStateOf<RestaurantMenu?>(null)}
 
-  /*  (MaterialTheme(   colorScheme = AppColors){
-        //poista kun toteutettu
 
-    }*/
 
 
     Scaffold (

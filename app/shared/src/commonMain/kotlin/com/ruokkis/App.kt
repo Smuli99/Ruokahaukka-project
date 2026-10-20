@@ -1,10 +1,14 @@
 package com.ruokkis
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
 fun App() {
-    HomePage()
+    MaterialTheme(   colorScheme = AppColors){
+        HomePage()
+    }
+
 }
