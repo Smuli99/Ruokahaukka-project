@@ -1,51 +1,74 @@
 package com.ruokkis
 
-import com.ruokkis.service.PiatoService
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.json
+import com.ruokkis.service.HttpRestaurantService
+import com.ruokkis.service.RestaurantNotFoundException
+import com.ruokkis.service.UpstreamException
+import com.ruokkis.service.restaurantRoutes
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
+import io.ktor.http.HttpStatusCode
+import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.response.*
+import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.response.respondText
 import io.ktor.server.routing.*
-import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
 
+/**
+ * Käynnistetään sovellus
+ *
+ * Nettypalvelin käynnistetään portissa 8080, jonka jälkeen ajetaan module funktio, mikä määritelty alla.
+ * host = "0.0.0.0" -> palvelimeen pääsee muilla koneilla esim. puhelimella samassa verkossa
+ */
 fun main() {
-//    Väliaikainen ratkaisu poistetaan, kun datan haku todettu toimivaksi
-    runBlocking {
-        val menu = PiatoService().fetchMenu()
-        println("Menu: $menu")
-        println(menu.restaurantName)
-        menu.days.forEach { day ->
-            println("${day.date.take(10)} (${day.lunchTime})")
-            day.menu.filter { it.dishes.isNotEmpty() }.forEach { meal ->
-                println(" ${meal.name}: ${meal.dishes}")
-            }
-        }
-    }
     embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
 }
 
+/**
+ * 1. Luodaan HttpClient, joilla ravintoloiden dataa haetaan
+ * 2. Listataan ravintolat
+ * 3. Asennetaan JSON-muunnos ja virheiden käsittely
+ * 4. Lisätään reitit
+ */
 fun Application.module() {
-    val piatoService = PiatoService()
-
-
-    install(ContentNegotiation) {
-        json()
+    val client = HttpClient(CIO) {
+        install(ClientContentNegotiation) {
+            json(Json { ignoreUnknownKeys = true })
+        }
     }
 
+    // Kun palvelin sammuu suljetaan HttpClient, jotta avoimet yhteydet ja säikeet vapautuu
+    monitor.subscribe(ApplicationStopped) { client.close() }
+
+    // Ravintolat -> tähän voi lisätä uusia
+    val services = listOf(
+        HttpRestaurantService(
+            id = "piato",
+            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1408&language=fi",
+            client = client,
+        ),
+    ).associateBy { it.id } // mutetaan Mapiksi ("piato" to HttpRestaurantService(...))
+
+
+    install(ContentNegotiation) { json() }
+
+    // Exceptionit muuttuvat status koodeksi
+    install(StatusPages) {
+        exception<RestaurantNotFoundException> { call, e ->
+            call.respondText("Tuntematon ravintola: ${e.id}", status = HttpStatusCode.NotFound)
+        }
+        exception<UpstreamException> { call, _ ->
+            call.respondText("Ravintolan palvelu ei vastaa", status = HttpStatusCode.BadGateway)
+        }
+    }
+
+    // Reitit
     routing {
-        get("/") {
-            call.respondText(sayHello("Ktor"))
-        }
-        get("/piato") {
-            try {
-                call.respond(piatoService.fetchMenu())
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest)
-            }
-        }
+        restaurantRoutes(services)
     }
 }

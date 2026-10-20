@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.ktor)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 group = "com.ruokkis"
@@ -11,6 +12,7 @@ application {
 
 dependencies {
     api(project(":core"))
+    implementation(libs.kotlinx.datetime)
     implementation(libs.logback)
     implementation(libs.ktor.serverCore)
     implementation(libs.ktor.serverNetty)
@@ -23,4 +25,5 @@ dependencies {
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
+    implementation("io.ktor:ktor-server-status-pages:3.6.0")
 }

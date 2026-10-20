@@ -1,6 +1,7 @@
 package com.ruokkis.network
 
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.serialization.kotlinx.json.json
@@ -14,9 +15,16 @@ fun createHttpClient() = HttpClient {
             ignoreUnknownKeys = true
         })
     }
+    install(HttpTimeout) {
+        connectTimeoutMillis = 30000
+        requestTimeoutMillis = 15000
+        socketTimeoutMillis = 15000
+    }
+
+    val serverHost = getServerHost()
 
     defaultRequest {
-        host = "10.3.63.120"
-        port = 8080
+        host = serverHost.host
+        port = serverHost.port
     }
 }
