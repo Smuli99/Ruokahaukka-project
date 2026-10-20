@@ -1,37 +1,168 @@
 package com.ruokkis
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.material3.Text
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.ruokkis.components.BottomBar
+import com.ruokkis.components.DayChooserBox
+import com.ruokkis.components.FilterTagBox
+import com.ruokkis.components.RestaurantCards
+import com.ruokkis.components.TopBar
+import com.ruokkis.model.RestaurantMenu
+import com.ruokkis.network.FoodListApi
+import com.ruokkis.network.createHttpClient
+import kotlinx.coroutines.launch
 
-class MainView {
 
-    @Composable
-    @Preview
+val testausTeksti = "\"Date\": \"2026-10-08T00:00:00+00:00\",\n" +
+        "      \"LunchTime\": \"10:30–16:30\",\n" +
+        "      \"SetMenus\": [\n" +
+        "        {\n" +
+        "          \"SortOrder\": 6,\n" +
+        "          \"Name\": \"LOUNAS\",\n" +
+        "          \"Price\": null,\n" +
+        "          \"Components\": [\n" +
+        "            \"Falafelpihvejä (G, ILM, L, M, Veg)\",\n" +
+        "            \"Tzatsikia (*, A, G, ILM, L, M, Veg)\"\n" +
+        "          ]\n" +
+        "        },\n" +
+        "        {\n" +
+        "          \"SortOrder\": 17,\n" +
+        "          \"Name\": \"LOUNAS\",\n" +
+        "          \"Price\": null,\n" +
+        "          \"Components\": []\n" +
+        "        },\n" +
+        "        {\n" +
+        "          \"SortOrder\": 24,\n" +
+        "          \"Name\": \"LOUNAS\",\n" +
+        "          \"Price\": null,\n" +
+        "          \"Components\": [\n" +
+        "            \"Chili-Fetapatonki - Limited edition (A, L)\",\n" +
+        "            \"Kana-savupalvipatonki - Limited edition (A, L, M)\"\n" +
+        "          ]\n" +
+        "        },\n" +
+        "        {\n" +
+        "          \"SortOrder\": 26,\n" +
+        "          \"Name\": \"LOUNAS\",\n" +
+        "          \"Price\": null,\n" +
+        "          \"Components\": [\n" +
+        "            \"Perinteistä makkarakastiketta (*, A, G, L, M)\"\n" +
+        "          ]\n" +
+        "        },\n" +
+        "        {\n" +
+        "          \"SortOrder\": 28,\n" +
+        "          \"Name\": \"KEITTOLOUNAS\",\n" +
+        "          \"Price\": null,\n" +
+        "          \"Components\": [\n" +
+        "            \"Hernekeittoa (*, A, G, ILM, L, M)\"\n" +
+        "          ]\n" +
+        "        },\n" +
+        "        {\n" +
+        "          \"SortOrder\": 29,\n" +
+        "          \"Name\": \"FROM THE TABLE\",\n" +
+        "          \"Price\": null,\n" +
+        "          \"Components\": []\n" +
+        "        },\n" +
+        "        {\n" +
+        "          \"SortOrder\": 31,\n" +
+        "          \"Name\": \"FROM THE GRILL\",\n" +
+        "          \"Price\": null,\n" +
+        "          \"Components\": [\n" +
+        "            \"Briossi BRG pekonilla ()\",\n" +
+        "            \"Ranskalaisia perunoita ()\"\n" +
+        "          ]\n" +
+        "        },\n" +
+        "        {\n" +
+        "          \"SortOrder\": 32,\n" +
+        "          \"Name\": \"JÄLKIRUOKA\",\n" +
+        "          \"Price\": null,\n" +
+        "          \"Components\": [\n" +
+        "            \"Meidän keittiön pannukakkua (A, L)\",\n" +
+        "            \"Vaniljakermavaahtoa (A, G, L)\"\n" +
+        "          ]\n" +
+        "        }\n" +
+        "      ]\n" +
+        "    }"
 
-    fun HomePage(){
-        MaterialTheme{
-            Column (
-                modifier = Modifier
-                    .background(Color(0xFFfdd0a2))
-                    .safeContentPadding()
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Box(){
-                    Text("moikkamoi")
+
+//UI elementit how to.tm
+//https://developer.android.com/develop/ui/compose/components
+
+@Composable
+@Preview
+fun HomePage() {
+
+    val httpClient = createHttpClient()
+    val foodListApi = remember { FoodListApi(httpClient) }
+    val scope = rememberCoroutineScope()
+    val piato = remember {mutableStateOf<RestaurantMenu?>(null)}
+
+  /*  (MaterialTheme(   colorScheme = AppColors){
+        //poista kun toteutettu
+
+    }*/
+
+
+    Scaffold (
+        topBar = {
+           TopBar()
+        },
+
+
+        bottomBar = {
+            BottomBar()
+        },
+
+
+    ){ innerPadding -> //Miksi?
+        Column(
+            modifier = Modifier
+                .padding(innerPadding).verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+
+        ) {
+
+            FilterTagBox() //TODO dynaaminen toteutus
+
+            DayChooserBox() //TODO Riviksi, lisää la + su
+
+            HorizontalDivider(thickness = 2.dp)
+
+            RestaurantCards() //TODO Tee pohja, Hae tiedot
+
+
+
+            Button(onClick = {
+                scope.launch {
+                    piato.value = foodListApi.getWeek("piato")
                 }
+            }) {
+                Text("Get Restaurant")
+            }
+            piato?.let { menu ->
+                Text(menu.toString())
             }
         }
+
+
+
+
 
     }
 
