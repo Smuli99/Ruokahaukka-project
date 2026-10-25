@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MultiChoiceSegmentedButtonRow
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,41 +19,35 @@ import androidx.compose.runtime.* // lisätty
 @Preview
 fun DayChooserBox() {
     var expanded by remember {mutableStateOf(false)} //lisätty verrattuna MainViewissä olleeseen
-    //Ilman dropdown menua? + Koko viikko (default)
-    // Koko viikko radio button (exlusive), päiviä voi valita monta
+    val selectedDays = remember {
+        mutableStateListOf(false, false, false, false, false, false, false, false)
+    }
+    val days = listOf("Ma","Ti","Ke","To","Pe","La","Su","All")
+    //korvaa All jollain väkäsellä
+    //Pitää tehdä logiikka, jolla All -> Deslect otehrs / Select All)
 
     Box(
         modifier = Modifier
-            .padding(10.dp)
+            .padding(5.dp)
     ){
-        Button(onClick = {expanded = !expanded}){
-            Text("Päivä")///moi
+       MultiChoiceSegmentedButtonRow{
+           days.forEachIndexed {index,label ->
+                SegmentedButton(
+                    shape = SegmentedButtonDefaults.itemShape(
+                        index = index,
+                        count = days.size
+                    ),
+                    checked = selectedDays[index],
+                    onCheckedChange = { checked -> selectedDays[index] = checked}
+
+                ){
+                    Text(label)
+                }}
+
+
         }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false}
-        ) {
-            DropdownMenuItem(
-                text= {Text("Ma")},
-                onClick = {/**/}
-            )
-            DropdownMenuItem(
-                text= {Text("Ti")},
-                onClick = {/**/}
-            )
-            DropdownMenuItem(
-                text= {Text("Ke")},
-                onClick = {/**/}
-            )
-            DropdownMenuItem(
-                text= {Text("To")},
-                onClick = {/**/}
-            )
-            DropdownMenuItem(
-                text= {Text("Pe")},
-                onClick = {/**/}
-            )
-        }
+
 
     }
 }
+
