@@ -2,9 +2,9 @@ name: Server tests
 
 on:
   push:
-    # Tänne myöhemmin main, preMain
+    # Tänne myöhemmin main, preMain, backend
     branches:
-      - backend
+      - tests
   pull_request:
     branches:
       - backend
