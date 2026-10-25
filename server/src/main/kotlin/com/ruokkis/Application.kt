@@ -5,6 +5,7 @@ import com.ruokkis.service.RestaurantNotFoundException
 import com.ruokkis.service.UpstreamException
 import com.ruokkis.service.restaurantRoutes
 import io.ktor.client.*
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
 import io.ktor.http.HttpStatusCode
@@ -30,13 +31,16 @@ fun main() {
 }
 
 /**
+ * Lisätty testejä varten moduulin parametriksi HttpClientEngine.
+ * Tuotannossa luo CIO enginen oletuksena ja testeissä kutsutaan halutulla enginellä.
+ *
  * 1. Luodaan HttpClient, joilla ravintoloiden dataa haetaan
  * 2. Listataan ravintolat
  * 3. Asennetaan JSON-muunnos ja virheiden käsittely
  * 4. Lisätään reitit
  */
-fun Application.module() {
-    val client = HttpClient(CIO) {
+fun Application.module(engine: HttpClientEngine = CIO.create()) {
+    val client = HttpClient(engine) {
         install(ClientContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
         }
