@@ -8,6 +8,7 @@ import io.ktor.server.routing.get
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.response.respondText
+import io.ktor.server.routing.route
 import io.ktor.server.testing.ApplicationTestBuilder
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
@@ -20,8 +21,8 @@ import kotlin.test.*
 // ainoastaan get pyynnössä muuttuu ravintolan id esim /piato, /taide ...
 class RoutingTest {
 
-    private val host = "https://www.semma.fi/"
-    private val route = "menuapi/feed/json"
+    private val HOST = "https://www.semma.fi/"
+    private val ROUTE = "menuapi/feed/json"
 
     /**
      * externalServices:
@@ -36,9 +37,9 @@ class RoutingTest {
      */
     private fun ApplicationTestBuilder.startApp() {
         externalServices {
-            hosts(host) {
+            hosts(HOST) {
                 routing {
-                    get(route) {
+                    get(ROUTE) {
                         call.respondText(TestData.dataJson, ContentType.Application.Json)
                     }
                 }
@@ -87,5 +88,17 @@ class RoutingTest {
         assertTrue(body.contains("ruoka huomenna"))
         assertFalse(body.contains("ruoka eilen"))
         assertFalse(body.contains("ruoka tanaan"))
+    }
+
+    @Test
+    fun getNotFound() = testApplication {
+        startApp()
+
+        val route = "unknown"
+        val response = client.get("/${route}")
+        val body = response.bodyAsText()
+
+        assertEquals(HttpStatusCode.NotFound, response.status)
+        assertTrue(body.contains("Tuntematon ravintola: ${route}"))
     }
 }
