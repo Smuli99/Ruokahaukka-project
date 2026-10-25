@@ -76,27 +76,27 @@ fun FilterTagBox(){
                 }
             )
 
-            AssistChip(
-                onClick = {},
-                label = {Text("Allergia")}
-            )
-
-            AssistChip(
-                onClick = {},
-                label = {Text("Moikka")}
-            )
-            AssistChip(
-                onClick = {},
-                label = {Text("Moikka")}
-            )
-            AssistChip(
-                onClick = {},
-                label = {Text("Moikka")}
-            )
-            AssistChip(
-                onClick = {},
-                label = {Text("Moikka")}
-            )
+//            AssistChip(
+//                onClick = {},
+//                label = {Text("Allergia")}
+//            )
+//
+//            AssistChip(
+//                onClick = {},
+//                label = {Text("Moikka")}
+//            )
+//            AssistChip(
+//                onClick = {},
+//                label = {Text("Moikka")}
+//            )
+//            AssistChip(
+//                onClick = {},
+//                label = {Text("Moikka")}
+//            )
+//            AssistChip(
+//                onClick = {},
+//                label = {Text("Moikka")}
+//            )
         }
     }
 }
