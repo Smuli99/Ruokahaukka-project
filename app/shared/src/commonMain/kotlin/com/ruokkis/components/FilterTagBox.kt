@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
@@ -35,15 +36,21 @@ import ruokkis.app.shared.generated.resources.home
 fun FilterTagBox(){
 
     val filtersList = arrayOf("G", "L", "M", "A", "VS", "Veg", "Vl", "MUNATON", "SOIJATON", "VOIMSUOLAI", "LAKTOVEGET",
-                                "ERITTVHG", "VEGAN", "SYDNMERKK", "ILMASTO", "ILM", "SILAINEET", "lAKTOOVOVE", "VRIAINEET")
+                                "ERITTVHG", "VEGAN", "SYDNMERKK", "ILMASTO", "ILM", "SILAINEET", "LAKTOOVOVE", "VRIAINEET")
 
     Card(
         colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
         modifier = Modifier
-            .padding(24.dp),
+            .padding(24.dp)
 
         //.size(width = 300.dp, height = 100.dp)
     ){
+        Text(
+            text = "Ruokavaliot", //Voi vaihtaa myös paremmin kuvavaan esim filtterit tms.
+            modifier = Modifier.fillMaxWidth()
+                .padding(0.dp, 16.dp, 16.dp),
+            textAlign = TextAlign.Center
+        )
         FlowRow(
             modifier = Modifier
                 .padding(10.dp)
