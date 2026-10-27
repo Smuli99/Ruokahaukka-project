@@ -92,6 +92,11 @@ fun Application.module() {
             url = "https://www.compass-group.fi/menuapi/feed/json?costNumber=0301&language=fi",
             client = client,
         ),
+        HttpRestaurantService(
+            id = "bistro",
+            url = "https://www.compass-group.fi/menuapi/feed/json?costNumber=3081&language=fi",
+            client = client,
+        ),
     ).associateBy { it.id } // mutetaan Mapiksi ("piato" to HttpRestaurantService(...))
 
 
