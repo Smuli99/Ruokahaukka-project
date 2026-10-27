@@ -10,17 +10,8 @@ import io.ktor.http.HttpStatusCode
 class FoodListApi(private val client: HttpClient) {
 
     // Koko viikon ruokalista id:nä annettava ravintolan nimi esim. "piato"
-    suspend fun getWeek(restaurantId: String): RestaurantMenu? {
-        println("EWAHDOIHDIDDWW" + restaurantId)
-        try{
-            return client.get("/${restaurantId}").body()
-        }catch(e: Exception){
-            println("Error:${e.message}")
-        }
-
-        return null
-    }
-
+    suspend fun getWeek(restaurantId: String): RestaurantMenu =
+        client.get("/${restaurantId}").body()
 
     // Tämän päivän ruokalista
     suspend fun getToday(restaurantId: String): DayMenu? {
