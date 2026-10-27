@@ -56,6 +56,51 @@ fun Application.module(engine: HttpClientEngine = CIO.create()) {
             url = "https://www.semma.fi/menuapi/feed/json?costNumber=1408&language=fi",
             client = client,
         ),
+        HttpRestaurantService(
+            id = "lozzi",
+            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1401&language=fi",
+            client = client,
+        ),
+        HttpRestaurantService(
+            id = "ilokivi",
+            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1419&language=fi",
+            client = client,
+        ),
+        HttpRestaurantService(
+            id = "uno",
+            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1414&language=fi",
+            client = client,
+        ),
+        HttpRestaurantService(
+            id = "ylisto", // kirjoitettu o:lla ö:n sijasta
+            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1403&language=fi",
+            client = client,
+        ),
+        HttpRestaurantService(
+            id = "rentukka", // kahvila
+            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1416&language=fi",
+            client = client,
+        ),
+        HttpRestaurantService(
+            id = "belvedere", // kahvila
+            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1404&language=fi",
+            client = client,
+        ),
+        HttpRestaurantService(
+            id = "syke", // kahvila
+            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1405&language=fi",
+            client = client,
+        ),
+        HttpRestaurantService(
+            id = "taide", // Sisältää myös kahvila Tieteen (Kirjasto Lähde)
+            url = "https://www.compass-group.fi/menuapi/feed/json?costNumber=0301&language=fi",
+            client = client,
+        ),
+        HttpRestaurantService(
+            id = "bistro",
+            url = "https://www.compass-group.fi/menuapi/feed/json?costNumber=3081&language=fi",
+            client = client,
+        ),
     ).associateBy { it.id } // mutetaan Mapiksi ("piato" to HttpRestaurantService(...))
 
 
