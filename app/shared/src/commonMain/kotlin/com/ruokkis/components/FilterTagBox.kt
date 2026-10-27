@@ -1,6 +1,5 @@
 package com.ruokkis.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,14 +20,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.painterResource
-import ruokkis.app.shared.generated.resources.Res
-import ruokkis.app.shared.generated.resources.heart
-import ruokkis.app.shared.generated.resources.home
 
 
 @Composable
@@ -43,10 +37,9 @@ fun FilterTagBox(){
         modifier = Modifier
             .padding(24.dp)
 
-        //.size(width = 300.dp, height = 100.dp)
     ){
         Text(
-            text = "Ruokavaliot", //Voi vaihtaa myös paremmin kuvavaan esim filtterit tms.
+            text = "Rajaa/hae",
             modifier = Modifier.fillMaxWidth()
                 .padding(0.dp, 16.dp, 16.dp),
             textAlign = TextAlign.Center
@@ -57,7 +50,6 @@ fun FilterTagBox(){
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp)
-//            maxItemsInEachRow = 4
 
 
 
@@ -82,59 +74,6 @@ fun FilterTagBox(){
                 )
             }
         }
+        //TODO: Lisää hakukenttä 
     }
 }
-
-
-// Vanha koodi jonka voi poistaa ennen mergeä, mutta muutoin toimii esimerkkinä
-//TODO: poista kun saadaan kokonaan valmiiksi
-/**
-
-            FilterChip(
-
-                onClick = { selected = false},
-                label = {Text("Ruokaa")},
-                selected = selected,
-                leadingIcon = {
-                    if (selected) {
-                        Image(
-                            painter = painterResource(Res.drawable.heart),
-                            contentDescription = "Heart", // huom. pitää muokkaa
-                            modifier = Modifier.size(24.dp),
-                            contentScale = ContentScale.Fit
-                        )
-
-                    } else {
-
-                        Image(
-                            painter = painterResource(Res.drawable.home),
-                            contentDescription = "Home", // huom. pitää muokkaa
-                            modifier = Modifier.size(24.dp),
-                            contentScale = ContentScale.Fit
-                        )
-                    }
-                }
-            )
-
-            AssistChip(
-                onClick = {},
-                label = {Text("Allergia")}
-            )
-
-            AssistChip(
-                onClick = {},
-                label = {Text("Moikka")}
-            )
-            AssistChip(
-                onClick = {},
-                label = {Text("Moikka")}
-            )
-            AssistChip(
-                onClick = {},
-                label = {Text("Moikka")}
-            )
-            AssistChip(
-                onClick = {},
-                label = {Text("Moikka")}
-            )*/
-
