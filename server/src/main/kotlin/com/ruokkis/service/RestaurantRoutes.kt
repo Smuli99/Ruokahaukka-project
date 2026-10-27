@@ -31,7 +31,7 @@ fun Route.restaurantRoutes(services: Map<String, RestaurantService>) {
         return services[id] ?: throw RestaurantNotFoundException(id)
     }
 
-    get("/restaurant") {
+    get("/restaurants") {
         call.respond(services.keys.toList())
     }
 
