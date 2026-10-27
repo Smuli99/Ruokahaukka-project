@@ -39,6 +39,7 @@ import kotlinx.coroutines.launch
 @Preview
 fun HomePage() {
 
+    // Voi poistaa kun aletaan oikeaa dataa näyttämään
     // remember pitää käyttää muuttuja.value, by ohittaa sen
     val foodListApi = remember { FoodListApi(createHttpClient()) }
     var menu by remember { mutableStateOf<RestaurantMenu?>(null) }
