@@ -3,7 +3,9 @@ package com.ruokkis
 import com.ruokkis.service.HttpRestaurantService
 import com.ruokkis.service.RestaurantNotFoundException
 import com.ruokkis.service.UpstreamException
+import com.ruokkis.service.database.AppDatabaseImpl
 import com.ruokkis.service.restaurantRoutes
+import com.ruokkis.service.routes.testRoutes
 import io.ktor.client.*
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.*
@@ -40,6 +42,8 @@ fun main() {
  * 4. Lisätään reitit
  */
 fun Application.module(engine: HttpClientEngine = CIO.create()) {
+    val database = AppDatabaseImpl()
+
     val client = HttpClient(engine) {
         install(ClientContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
@@ -74,5 +78,6 @@ fun Application.module(engine: HttpClientEngine = CIO.create()) {
     // Reitit
     routing {
         restaurantRoutes(services)
+        testRoutes(database)
     }
 }

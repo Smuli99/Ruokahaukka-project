@@ -26,4 +26,12 @@ dependencies {
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
     implementation("io.ktor:ktor-server-status-pages:3.6.0")
+//    DB
+    implementation(libs.exposed.core)
+    implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.dao)
+    implementation(libs.postgresql)
+    implementation(libs.hikari.cb)
+    implementation(libs.flyway.core)
+    implementation(libs.flyway.postgresql)
 }
