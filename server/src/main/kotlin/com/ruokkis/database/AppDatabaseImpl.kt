@@ -1,4 +1,4 @@
-package com.ruokkis.service.database
+package com.ruokkis.database
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
