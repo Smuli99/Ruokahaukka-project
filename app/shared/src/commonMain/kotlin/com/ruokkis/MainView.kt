@@ -11,9 +11,12 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,6 +44,15 @@ fun HomePage() {
     val scope = rememberCoroutineScope()
     val piato = remember {mutableStateOf<RestaurantMenu?>(null)}
 
+    // Tallennetaan hakusana tänne, jotta hakua tehdessä voidaan oikeasti filtteröidä ruokia
+    var searchQuery by rememberSaveable {
+        mutableStateOf("")
+    }
+    // Tallennetaan valitut filtterit, jotta voidaan filtteröidä ruokia
+    var selectedFilters by remember {
+        mutableStateOf(setOf<String>())
+    }
+
 
 
 
@@ -63,8 +75,18 @@ fun HomePage() {
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
-
-            FilterTagBox() //TODO dynaaminen toteutus
+            /**
+             * annetaan filterTagBoxille nämä argumentit, jotta näiden vaikutus saadaan myös muille
+             * jotka riippuvat filtteröinneistä
+             */
+            FilterTagBox(
+                searchQuery = searchQuery,
+                onSearchQueryChange = { searchQuery = it },
+                selectedFilters = selectedFilters,
+                onSelectedFiltersChange = {
+                    selectedFilters = it
+                }
+            )
 
             DayChooserBox() //TODO Riviksi, lisää la + su
 

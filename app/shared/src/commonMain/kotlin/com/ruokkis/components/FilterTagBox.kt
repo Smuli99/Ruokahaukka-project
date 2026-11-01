@@ -1,14 +1,10 @@
 package com.ruokkis.components
 
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
@@ -16,35 +12,26 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
-import androidx.compose.material3.SearchBarDefaults.InputField
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.isTraversalGroup
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.ktor.websocket.Frame
 
 
 @Composable
-@Preview
-fun FilterTagBox(){
+@Preview //Jotta tällä tavalla tehdessä preview toimii täytyy antaa default arvot jokaiselle parametrille, mutta nämä ei vaikuta toiminnallisuuteen
+fun FilterTagBox(
+    searchQuery: String = "",
+    onSearchQueryChange: (String) -> Unit = {},
+    selectedFilters: Set<String> = emptySet(),
+    onSelectedFiltersChange: (Set<String>) -> Unit = {}
+){
 
-    val filtersList = arrayOf("G", "L", "M", "A", "VS", "Veg", "Vl", "MUNATON", "SOIJATON", "VOIMSUOLAI", "LAKTOVEGET",
+    val filtersList = listOf("G", "L", "M", "A", "VS", "Veg", "Vl", "MUNATON", "SOIJATON", "VOIMSUOLAI", "LAKTOVEGET",
                                 "ERITTVHG", "VEGAN", "SYDNMERKK", "ILMASTO", "ILM", "SILAINEET", "LAKTOOVOVE", "VRIAINEET")
 
     Card(
@@ -70,9 +57,21 @@ fun FilterTagBox(){
 
         ){
             for(filter in filtersList) {
-                var selected by remember { mutableStateOf(false) } // Tämän pitää olla for loopin sisällä, jotta jokainen chip saa oman tilan oikein eikä jaettua
+                val selected = filter in selectedFilters
                 FilterChip(
-                    onClick = {selected = !selected },
+                    /**
+                     * onClick toiminnallisuuteen lisätty toimintoja, jotta mainview tietää mitkä ovat valittuja
+                     * jotta saadaan oikein filtteröityä ruokia
+                     */
+                    onClick = {
+                        onSelectedFiltersChange(
+                            if (selected) {
+                                selectedFilters - filter
+                            } else {
+                                selectedFilters + filter
+                            }
+                        )
+                    },
                     label = {Text(filter)},
                     selected = selected,
                     leadingIcon = if (selected) {
@@ -89,44 +88,15 @@ fun FilterTagBox(){
                 )
             }
         }
-        //TODO: Lisää hakukenttä
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SimpleSearchBar(
-    textFieldState: TextFieldState,
-    onSearch: (String) -> Unit,
-    searchResults: List<String>,
-    modifier: Modifier = Modifier
-) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
-
-    Box(
-        modifier
-            .fillMaxSize()
-            .semantics { isTraversalGroup = true}
-    ) {
-        SearchBar(
+        // Hakukenttä joka pystyy vaikuttamaan RestaurantsCardien sisältöön
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = onSearchQueryChange,
             modifier = Modifier
-                .align(Alignment.Center)
-                .semantics { traversalIndex = 0f },
-            inputField = {
-                InputField(
-                    query = textFieldState.text.toString(),
-                    onQueryChange = { textFieldState.edit { replace(0, length, it) } },
-                    onSearch = {
-                        onSearch(textFieldState.text.toString())
-                        expanded = false
-                    },
-                    expanded = expanded,
-                    onExpandedChange = { expanded = it },
-                    placeholder = { Text("Haku") }
-                )
-            },
-            expanded = expanded,
-            onExpandedChange = { expanded = it },
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
+            placeholder = { Text("Hae") },
+            singleLine = true
         )
     }
 }
