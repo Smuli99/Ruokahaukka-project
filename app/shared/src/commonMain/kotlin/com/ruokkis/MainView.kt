@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,60 +37,61 @@ import kotlinx.coroutines.launch
 @Preview
 fun HomePage() {
 
-    val httpClient = createHttpClient()
-    val foodListApi = remember { FoodListApi(httpClient) }
-    val scope = rememberCoroutineScope()
-    val piato = remember {mutableStateOf<RestaurantMenu?>(null)}
+    MaterialTheme(
+        colorScheme = AppColors
+    ) {
+
+
+        val httpClient = createHttpClient()
+        val foodListApi = remember { FoodListApi(httpClient) }
+        val scope = rememberCoroutineScope()
+        val piato = remember { mutableStateOf<RestaurantMenu?>(null) }
 
 
 
 
-    Scaffold (
-        topBar = {
-           TopBar()
-        },
+        Scaffold(
+            topBar = {
+                TopBar()
+            },
 
 
-        bottomBar = {
-            BottomBar()
-        },
+            bottomBar = {
+                BottomBar()
+            },
 
 
-    ){ innerPadding -> //Miksi?
-        Column(
-            modifier = Modifier
-                .padding(innerPadding).verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            ) { innerPadding -> //Miksi?
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding).verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
 
-        ) {
+            ) {
 
-            FilterTagBox() //TODO dynaaminen toteutus
+                FilterTagBox() //TODO dynaaminen toteutus
 
-            DayChooserBox() //TODO Riviksi, lisää la + su
+                DayChooserBox() //TODO Riviksi, lisää la + su
 
-            HorizontalDivider(thickness = 2.dp)
+                HorizontalDivider(thickness = 2.dp)
 
-            RestaurantCards() //TODO Tee pohja, Hae tiedot
+                RestaurantCards() //TODO Tee pohja, Hae tiedot
 
 
-
-            Button(onClick = {
-                scope.launch {
-                    piato.value = foodListApi.getWeek("piato")
+                Button(onClick = {
+                    scope.launch {
+                        piato.value = foodListApi.getWeek("piato")
+                    }
+                }) {
+                    Text("Get Restaurant")
                 }
-            }) {
-                Text("Get Restaurant")
+                piato?.let { menu ->
+                    Text(menu.toString())
+                }
             }
-            piato?.let { menu ->
-                Text(menu.toString())
-            }
+
+
         }
-
-
-
-
-
     }
-
 }
