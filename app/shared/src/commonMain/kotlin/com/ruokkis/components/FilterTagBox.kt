@@ -71,6 +71,14 @@ fun FilterTagBox(
                     },
                     label = {Text(filter)},
                     selected = selected,
+                    colors = FilterChipDefaults.filterChipColors(
+
+                        selectedContainerColor = MaterialTheme.colorScheme.primary,
+                        selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        labelColor = MaterialTheme.colorScheme.onSurface,
+                        ),
                     leadingIcon = if (selected) {
                         {
                             Icon(
