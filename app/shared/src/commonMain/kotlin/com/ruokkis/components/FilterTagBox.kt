@@ -50,11 +50,8 @@ fun FilterTagBox(
             modifier = Modifier
                 .padding(10.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalArrangement = Arrangement.spacedBy(5.dp)
-
-
-
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            verticalArrangement= Arrangement.spacedBy(5.dp)
         ){
             for(filter in filtersList) {
                 val selected = filter in selectedFilters
@@ -94,7 +91,7 @@ fun FilterTagBox(
             onValueChange = onSearchQueryChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp),
+                .padding( 10.dp, 5.dp, 10.dp, 20.dp),
             placeholder = { Text("Hae") },
             singleLine = true
         )
