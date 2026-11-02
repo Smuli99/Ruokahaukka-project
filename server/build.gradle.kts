@@ -28,6 +28,7 @@ dependencies {
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
     implementation(libs.exposed.dao)
+    implementation(libs.exposed.kotlin.datetime)
     implementation(libs.postgresql)
     implementation(libs.hikari.cb)
     implementation(libs.flyway.core)
