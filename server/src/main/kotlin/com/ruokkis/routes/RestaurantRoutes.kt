@@ -30,6 +30,7 @@ fun Route.restaurantRoutes2(
 
             if (restaurantData.url.isBlank()) {
                 call.respond(HttpStatusCode.BadRequest, "Url cannot be empty")
+                return@post
             }
 
             if (
@@ -46,7 +47,7 @@ fun Route.restaurantRoutes2(
             if (newRestaurant == null) {
                 call.respond(
                     HttpStatusCode.Conflict,
-                    "Restaurant already exists"
+                    "Restaurant with name '${restaurantData.name}' already exists"
                 )
                 return@post
             }
