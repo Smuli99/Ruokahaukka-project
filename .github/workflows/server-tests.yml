@@ -5,6 +5,8 @@ on:
     # Tänne myöhemmin main, preMain, backend
     branches:
       - tests
+      - backend
+      - database
   pull_request:
     branches:
       - backend
