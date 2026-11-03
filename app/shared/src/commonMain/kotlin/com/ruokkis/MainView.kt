@@ -11,11 +11,11 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,21 +39,22 @@ import kotlinx.coroutines.launch
 @Preview
 fun HomePage() {
 
-    // Voi poistaa kun aletaan oikeaa dataa näyttämään
-    // remember pitää käyttää muuttuja.value, by ohittaa sen
-    val foodListApi = remember { FoodListApi(createHttpClient()) }
-    var menu by remember { mutableStateOf<RestaurantMenu?>(null) }
-    var showMenu by remember { mutableStateOf(false) }
+    val httpClient = createHttpClient()
+    val foodListApi = remember { FoodListApi(httpClient) }
+    val scope = rememberCoroutineScope()
+    val piato = remember {mutableStateOf<RestaurantMenu?>(null)}
 
-    /**
-     * Ajetaan vain kerran sovelluksen avatessa
-     * param: Unit -> ei ajeta uudestaan, voi lisätä jonkin parametrin,
-     * minkä avulla data haetaan uudestaan, esim viikon vaihtuessa niin
-     * saadaan aina oikea menu
-     */
-    LaunchedEffect(Unit) {
-        menu = foodListApi.getWeek("piato")
+    // Tallennetaan hakusana tänne, jotta hakua tehdessä voidaan oikeasti filtteröidä ruokia
+    var searchQuery by rememberSaveable {
+        mutableStateOf("")
     }
+    // Tallennetaan valitut filtterit, jotta voidaan filtteröidä ruokia
+    var selectedFilters by remember {
+        mutableStateOf(setOf<String>())
+    }
+
+
+
 
     Scaffold (
         topBar = {
@@ -74,8 +75,18 @@ fun HomePage() {
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
-
-            FilterTagBox() //TODO dynaaminen toteutus
+            /**
+             * annetaan filterTagBoxille nämä argumentit, jotta näiden vaikutus saadaan myös muille
+             * jotka riippuvat filtteröinneistä
+             */
+            FilterTagBox(
+                searchQuery = searchQuery,
+                onSearchQueryChange = { searchQuery = it },
+                selectedFilters = selectedFilters,
+                onSelectedFiltersChange = {
+                    selectedFilters = it
+                }
+            )
 
             DayChooserBox() //TODO Riviksi, lisää la + su
 
