@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,11 +40,11 @@ import kotlinx.coroutines.launch
 @Preview
 fun HomePage() {
 
-    val httpClient = createHttpClient()
-    val foodListApi = remember { FoodListApi(httpClient) }
-    val scope = rememberCoroutineScope()
-    val piato = remember {mutableStateOf<RestaurantMenu?>(null)}
 
+        val httpClient = createHttpClient()
+        val foodListApi = remember { FoodListApi(httpClient) }
+        val scope = rememberCoroutineScope()
+        val piato = remember { mutableStateOf<RestaurantMenu?>(null) }
     // Tallennetaan hakusana tänne, jotta hakua tehdessä voidaan oikeasti filtteröidä ruokia
     var searchQuery by rememberSaveable {
         mutableStateOf("")
@@ -56,24 +57,26 @@ fun HomePage() {
 
 
 
-    Scaffold (
-        topBar = {
-           TopBar()
-        },
+
+        Scaffold(
+            topBar = {
+                TopBar()
+            },
 
 
-        bottomBar = {
-            BottomBar()
-        },
+            bottomBar = {
+                BottomBar()
+            },
 
 
-    ){ innerPadding -> //Miksi?
-        Column(
-            modifier = Modifier
-                .padding(innerPadding).verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            ) { innerPadding -> //Miksi?
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding).verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
 
+            ) {
         ) {
             /**
              * annetaan filterTagBoxille nämä argumentit, jotta näiden vaikutus saadaan myös muille
@@ -88,31 +91,28 @@ fun HomePage() {
                 }
             )
 
-            DayChooserBox() //TODO Riviksi, lisää la + su
+                FilterTagBox() //TODO dynaaminen toteutus
 
-            HorizontalDivider(thickness = 2.dp)
+                DayChooserBox() //TODO Riviksi, lisää la + su
 
-            RestaurantCards() //TODO Tee pohja, Hae tiedot
+                HorizontalDivider(thickness = 2.dp)
+
+                RestaurantCards() //TODO Tee pohja, Hae tiedot
 
 
-
-            Button(onClick = { showMenu = !showMenu }) {
-                Text(if (showMenu) "Hide menu" else "Show menu")
-            }
-
-            if (showMenu) {
-                menu?.days?.forEach { day ->
-                    Text(day.date)
-                    day.meals.forEach { meal ->
-                        var price = meal.prices
-                        if (price == null) price = "Price not available"
-                        Text(price)
-                        meal.dishes.forEach { dish ->
-                            Text(dish)
-                        }
+                Button(onClick = {
+                    scope.launch {
+                        piato.value = foodListApi.getWeek("piato")
                     }
+                }) {
+                    Text("Get Restaurant")
+                }
+                piato?.let { menu ->
+                    Text(menu.toString())
                 }
             }
+
+
         }
-    }
+
 }
