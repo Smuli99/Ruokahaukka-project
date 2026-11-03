@@ -6,6 +6,7 @@ import com.ruokkis.service.UpstreamException
 import com.ruokkis.database.AppDatabaseImpl
 import com.ruokkis.repository.RestaurantRepositoryImpl
 import com.ruokkis.routes.configureFetchingRoutes
+import com.ruokkis.routes.configureRestaurantRoutes
 import com.ruokkis.service.RestaurantService
 import com.ruokkis.service.RestaurantSyncService
 import io.ktor.client.*
@@ -86,9 +87,7 @@ fun Application.module(engine: HttpClientEngine = CIO.create()) {
 
     // Reitit
     routing {
-//        restaurantRoutes(services)
-//        testRoutes(database)
-//        restaurantRoutes2(service)
+        configureRestaurantRoutes(service)
         configureFetchingRoutes(syncService)
     }
 }
