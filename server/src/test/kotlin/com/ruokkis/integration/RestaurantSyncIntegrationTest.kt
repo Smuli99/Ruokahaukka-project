@@ -31,8 +31,8 @@ class RestaurantSyncIntegrationTest {
         database.close()
     }
 
-    @Test
-    fun `TODO` = runTest {
-        //TODO
-    }
+//    @Test
+//    fun `TODO`() = runTest {
+//        //TODO
+//    }
 }

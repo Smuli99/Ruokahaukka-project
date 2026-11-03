@@ -1,7 +1,6 @@
 package com.ruokkis
 
 import com.ruokkis.client.RestaurantFetcher
-import com.ruokkis.service.HttpRestaurantService
 import com.ruokkis.service.RestaurantNotFoundException
 import com.ruokkis.service.UpstreamException
 import com.ruokkis.database.AppDatabaseImpl
@@ -9,7 +8,6 @@ import com.ruokkis.repository.RestaurantRepositoryImpl
 import com.ruokkis.routes.configureFetchingRoutes
 import com.ruokkis.service.RestaurantService2
 import com.ruokkis.service.RestaurantSyncService
-import com.ruokkis.service.restaurantRoutes
 import io.ktor.client.*
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.*
@@ -60,14 +58,15 @@ fun Application.module(engine: HttpClientEngine = CIO.create()) {
     // Kun palvelin sammuu suljetaan HttpClient, jotta avoimet yhteydet ja säikeet vapautuu
     monitor.subscribe(ApplicationStopped) { client.close() }
 
-    // Ravintolat -> tähän voi lisätä uusia
-    val services = listOf(
-        HttpRestaurantService(
-            id = "piato",
-            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1408&language=fi",
-            client = client,
-        ),
-    ).associateBy { it.id } // mutetaan Mapiksi ("piato" to HttpRestaurantService(...))
+    // tulee poistumaan
+//    // Ravintolat -> tähän voi lisätä uusia
+//    val services = listOf(
+//        HttpRestaurantService(
+//            id = "piato",
+//            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1408&language=fi",
+//            client = client,
+//        ),
+//    ).associateBy { it.id } // mutetaan Mapiksi ("piato" to HttpRestaurantService(...))
 
 
     install(ContentNegotiation) { json() }

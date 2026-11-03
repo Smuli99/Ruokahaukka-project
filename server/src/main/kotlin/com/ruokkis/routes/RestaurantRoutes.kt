@@ -13,12 +13,13 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 
+
 fun Route.configureRestaurantRoutes(
-    restaurantService: RestaurantService2
+    service: RestaurantService2
 ) {
     route("/restaurants") {
         get {
-            val restaurants = restaurantService.getRestaurants()
+            val restaurants = service.getRestaurants()
             call.respond(restaurants)
         }
 
@@ -44,7 +45,7 @@ fun Route.configureRestaurantRoutes(
                 return@post
             }
 
-            val newRestaurant: Restaurant? = restaurantService.createRestaurant(restaurantData)
+            val newRestaurant: Restaurant? = service.createRestaurant(restaurantData)
 
             if (newRestaurant == null) {
                 call.respond(
