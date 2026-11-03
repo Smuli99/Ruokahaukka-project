@@ -83,8 +83,6 @@ fun HomePage() {
                 }
             )
 
-            FilterTagBox() //TODO dynaaminen toteutus
-
             DayChooserBox() //TODO Riviksi, lisää la + su
 
             HorizontalDivider(thickness = 2.dp)
