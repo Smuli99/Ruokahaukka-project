@@ -96,22 +96,23 @@ fun HomePage() {
 
 
 
-            Button(onClick = {
-                scope.launch {
-                    piato.value = foodListApi.getWeek("piato")
-                }
-            }) {
-                Text("Get Restaurant")
+            Button(onClick = { showMenu = !showMenu }) {
+                Text(if (showMenu) "Hide menu" else "Show menu")
             }
-            piato?.let { menu ->
-                Text(menu.toString())
+
+            if (showMenu) {
+                menu?.days?.forEach { day ->
+                    Text(day.date)
+                    day.meals.forEach { meal ->
+                        var price = meal.prices
+                        if (price == null) price = "Price not available"
+                        Text(price)
+                        meal.dishes.forEach { dish ->
+                            Text(dish)
+                        }
+                    }
+                }
             }
         }
-
-
-
-
-
     }
-
 }
