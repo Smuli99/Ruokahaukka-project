@@ -40,11 +40,11 @@ import kotlinx.coroutines.launch
 @Preview
 fun HomePage() {
 
+    val httpClient = createHttpClient()
+    val foodListApi = remember { FoodListApi(httpClient) }
+    val scope = rememberCoroutineScope()
+    val piato = remember { mutableStateOf<RestaurantMenu?>(null) }
 
-        val httpClient = createHttpClient()
-        val foodListApi = remember { FoodListApi(httpClient) }
-        val scope = rememberCoroutineScope()
-        val piato = remember { mutableStateOf<RestaurantMenu?>(null) }
     // Tallennetaan hakusana tänne, jotta hakua tehdessä voidaan oikeasti filtteröidä ruokia
     var searchQuery by rememberSaveable {
         mutableStateOf("")
@@ -54,22 +54,14 @@ fun HomePage() {
         mutableStateOf(setOf<String>())
     }
 
-
-
-
-
-        Scaffold(
-            topBar = {
-                TopBar()
-            },
-
-
-            bottomBar = {
-                BottomBar()
-            },
-
-
-            ) { innerPadding -> //Miksi?
+    Scaffold(
+        topBar = {
+            TopBar()
+        },
+        bottomBar = {
+            BottomBar()
+        },
+        ) { innerPadding -> //Miksi?
             Column(
                 modifier = Modifier
                     .padding(innerPadding).verticalScroll(rememberScrollState()),
@@ -77,7 +69,7 @@ fun HomePage() {
                 horizontalAlignment = Alignment.CenterHorizontally
 
             ) {
-        ) {
+
             /**
              * annetaan filterTagBoxille nämä argumentit, jotta näiden vaikutus saadaan myös muille
              * jotka riippuvat filtteröinneistä
@@ -91,28 +83,25 @@ fun HomePage() {
                 }
             )
 
-                FilterTagBox() //TODO dynaaminen toteutus
+            FilterTagBox() //TODO dynaaminen toteutus
 
-                DayChooserBox() //TODO Riviksi, lisää la + su
+            DayChooserBox() //TODO Riviksi, lisää la + su
 
-                HorizontalDivider(thickness = 2.dp)
+            HorizontalDivider(thickness = 2.dp)
 
-                RestaurantCards() //TODO Tee pohja, Hae tiedot
+            RestaurantCards() //TODO Tee pohja, Hae tiedot
 
 
-                Button(onClick = {
-                    scope.launch {
-                        piato.value = foodListApi.getWeek("piato")
-                    }
-                }) {
-                    Text("Get Restaurant")
+            Button(onClick = {
+                scope.launch {
+                    piato.value = foodListApi.getWeek("piato")
                 }
-                piato?.let { menu ->
-                    Text(menu.toString())
-                }
+            }) {
+                Text("Get Restaurant")
             }
-
-
+            piato?.let { menu ->
+                    Text(menu.toString())
+            }
         }
-
+    }
 }
