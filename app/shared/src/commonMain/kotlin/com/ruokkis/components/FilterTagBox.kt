@@ -51,7 +51,7 @@ fun FilterTagBox(
                 .padding(10.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(5.dp),
-            verticalArrangement= Arrangement.spacedBy(5.dp)
+            verticalArrangement= Arrangement.spacedBy(1.dp)
         ){
             for(filter in filtersList) {
                 val selected = filter in selectedFilters
