@@ -4,7 +4,7 @@ import org.jetbrains.exposed.v1.core.ReferenceOption
 import org.jetbrains.exposed.v1.core.dao.id.java.UUIDTable
 import org.jetbrains.exposed.v1.datetime.date
 
-object DayMenu : UUIDTable("day_menu") {
+object DayMenuTable : UUIDTable("day_menu") {
     val weekMenuId = reference(
         "week_menu_id",
         WeekMenuTable,

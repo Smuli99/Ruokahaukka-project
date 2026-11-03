@@ -1,6 +1,6 @@
 package com.ruokkis.routes
 
-import com.ruokkis.models.NewRestaurant
+import com.ruokkis.models.NewRestaurantMenu
 import com.ruokkis.models.Restaurant
 import com.ruokkis.service.RestaurantService2
 import io.ktor.http.HttpStatusCode
@@ -11,7 +11,7 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 
-fun Route.restaurantRoutes2(
+fun Route.configureRestaurantRoutes(
     restaurantService: RestaurantService2
 ) {
     route("/restaurants") {
@@ -21,7 +21,7 @@ fun Route.restaurantRoutes2(
         }
 
         post {
-            val restaurantData = call.receive<NewRestaurant>()
+            val restaurantData = call.receive<NewRestaurantMenu>()
 
             if (restaurantData.name.isBlank()) {
                 call.respond(HttpStatusCode.BadRequest, "Name cannot be empty")

@@ -1,6 +1,6 @@
 package com.ruokkis.service
 
-import com.ruokkis.models.NewRestaurant
+import com.ruokkis.models.NewRestaurantMenu
 import com.ruokkis.models.Restaurant
 import com.ruokkis.repository.RestaurantRepository
 
@@ -24,8 +24,8 @@ class RestaurantService2(
 //    }
 //
     // Luodaan uusi ravintola
-    suspend fun createRestaurant(restaurant: NewRestaurant): Restaurant? {
-        if (restaurantRepository.findByName(restaurant.name)) return null
+    suspend fun createRestaurant(restaurant: NewRestaurantMenu): Restaurant? {
+        if (restaurantRepository.existsByName(restaurant.name)) return null
         return restaurantRepository.create(restaurant)
     }
 }

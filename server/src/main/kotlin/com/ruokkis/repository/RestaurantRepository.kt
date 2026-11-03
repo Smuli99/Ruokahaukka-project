@@ -1,7 +1,10 @@
 package com.ruokkis.repository
 
-import com.ruokkis.models.NewRestaurant
+import com.ruokkis.models.NewRestaurantMenu
+import com.ruokkis.models.NewWeekMenu
 import com.ruokkis.models.Restaurant
+import com.ruokkis.models.WeekMenu
+import kotlinx.datetime.LocalDate
 
 /**
  * Toiminnot, mitä halutaan ravintoloille
@@ -10,9 +13,11 @@ import com.ruokkis.models.Restaurant
  */
 interface RestaurantRepository {
     suspend fun findAll(): List<Restaurant>
-    suspend fun create(restaurant: NewRestaurant): Restaurant
-    suspend fun findByName(name: String): Boolean
-//    suspend fun findByName(name: String): Restaurant?
+    suspend fun create(restaurant: NewRestaurantMenu): Restaurant
+    suspend fun existsByName(name: String): Boolean
+    suspend fun findByName(name: String): Restaurant?
+    suspend fun findWeekMenu(restaurantId: String, weekStart: LocalDate): WeekMenu?
+    suspend fun createWeekMenu(restaurantId: String, menu: NewWeekMenu): String
 //    suspend fun findById(id: String): Restaurant?
 //    suspend fun update(restaurant: Restaurant): Restaurant
 //    suspend fun delete(restaurant: Restaurant): Boolean

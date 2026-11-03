@@ -6,7 +6,7 @@ import org.jetbrains.exposed.v1.core.dao.id.java.UUIDTable
 object MenuItemTable : UUIDTable("menu_item") {
     val dayMenuId = reference(
         "day_menu_id",
-        MenuItemTable,
+        DayMenuTable,
         ReferenceOption.CASCADE,
     )
 

@@ -16,11 +16,11 @@ data class RestaurantDto(
     val url: String,
 
     @SerialName("MenusForDays")
-    val weekMenu: List<WeekMenuDto?>,
+    val days: List<DayMenuDto?>,
 )
 
 @Serializable
-data class WeekMenuDto(
+data class DayMenuDto(
     @SerialName("Date")
     val date: String?,
 
@@ -28,17 +28,20 @@ data class WeekMenuDto(
     val lunchTime: String?,
 
     @SerialName("SetMenus")
-    val dayMenu: List<DayMenuDto?>,
+    val items: List<MenuItemDto?>,
 )
 
 @Serializable
-data class DayMenuDto(
+data class MenuItemDto(
     @SerialName("Name")
     val info: String?, // Lounas, From the Table
 
     @SerialName("Price")
     val price: String?,
 
+    @SerialName("SortOrder")
+    val sortOrder: Int?,
+
     @SerialName("Components")
-    val food: List<String?>,
+    val foods: List<String?>,
 )
