@@ -6,7 +6,7 @@ import com.ruokkis.service.UpstreamException
 import com.ruokkis.database.AppDatabaseImpl
 import com.ruokkis.repository.RestaurantRepositoryImpl
 import com.ruokkis.routes.configureFetchingRoutes
-import com.ruokkis.service.RestaurantService2
+import com.ruokkis.service.RestaurantService
 import com.ruokkis.service.RestaurantSyncService
 import io.ktor.client.*
 import io.ktor.client.engine.HttpClientEngine
@@ -46,7 +46,7 @@ fun main() {
 fun Application.module(engine: HttpClientEngine = CIO.create()) {
     val database = AppDatabaseImpl()
     val repository = RestaurantRepositoryImpl(database)
-    val service = RestaurantService2(repository)
+    val service = RestaurantService(repository)
 
 
     val client = HttpClient(engine) {

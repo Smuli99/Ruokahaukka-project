@@ -2,7 +2,7 @@ package com.ruokkis.routes
 
 import com.ruokkis.models.NewRestaurantMenu
 import com.ruokkis.models.Restaurant
-import com.ruokkis.service.RestaurantService2
+import com.ruokkis.service.RestaurantService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
@@ -15,7 +15,7 @@ import io.ktor.server.routing.route
 
 
 fun Route.configureRestaurantRoutes(
-    service: RestaurantService2
+    service: RestaurantService
 ) {
     route("/restaurants") {
         get {

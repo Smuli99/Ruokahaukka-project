@@ -10,7 +10,7 @@ import com.ruokkis.repository.RestaurantRepository
  * näkyviin, niin täällä hoidetaan sen logiikka, eli kutsutaan Repositoria, joka hoitaa komminikoinnin
  * tietokannan kanssa ja lähetetään se eteenpäin Routelle
  */
-class RestaurantService2(
+class RestaurantService(
     private val restaurantRepository: RestaurantRepository
 ) {
     // Haetaan kaikki ravintolat tietokannasta
