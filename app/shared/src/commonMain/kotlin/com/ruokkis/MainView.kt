@@ -37,10 +37,6 @@ import kotlinx.coroutines.launch
 @Preview
 fun HomePage() {
 
-    MaterialTheme(
-        colorScheme = AppColors
-    ) {
-
 
         val httpClient = createHttpClient()
         val foodListApi = remember { FoodListApi(httpClient) }
@@ -93,5 +89,5 @@ fun HomePage() {
 
 
         }
-    }
+
 }

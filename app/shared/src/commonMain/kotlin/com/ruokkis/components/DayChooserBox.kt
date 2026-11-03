@@ -25,6 +25,7 @@ fun DayChooserBox() {
     val days = listOf("All", "Ma", "Ti", "Ke", "To", "Pe", "La", "Su")
     //korvaa All jollain väkäsellä
     //Pitää tehdä logiikka, jolla All -> Deslect otehrs / Select All)
+    // All -> kaikki tummanvihreänä?
 
     Box(
         modifier = Modifier
