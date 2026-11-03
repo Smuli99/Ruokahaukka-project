@@ -41,7 +41,7 @@ dependencies {
     testImplementation(libs.h2)
     testImplementation(libs.kotlin.test.junit5)
     testImplementation(libs.ktor.serverTestHost)
-//    testImplementation(libs.kotlin.testJunit)
+    testImplementation(libs.ktor.client.mock)
 }
 
 tasks.test {
