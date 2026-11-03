@@ -1,12 +1,14 @@
 package com.ruokkis
 
+import com.ruokkis.client.RestaurantFetcher
 import com.ruokkis.service.HttpRestaurantService
 import com.ruokkis.service.RestaurantNotFoundException
 import com.ruokkis.service.UpstreamException
 import com.ruokkis.database.AppDatabaseImpl
 import com.ruokkis.repository.RestaurantRepositoryImpl
-import com.ruokkis.routes.restaurantRoutes2
+import com.ruokkis.routes.configureFetchingRoutes
 import com.ruokkis.service.RestaurantService2
+import com.ruokkis.service.RestaurantSyncService
 import com.ruokkis.service.restaurantRoutes
 import io.ktor.client.*
 import io.ktor.client.engine.HttpClientEngine
@@ -48,6 +50,7 @@ fun Application.module(engine: HttpClientEngine = CIO.create()) {
     val repository = RestaurantRepositoryImpl(database)
     val service = RestaurantService2(repository)
 
+
     val client = HttpClient(engine) {
         install(ClientContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
@@ -79,10 +82,14 @@ fun Application.module(engine: HttpClientEngine = CIO.create()) {
         }
     }
 
+    val fetcher = RestaurantFetcher(client)
+    val syncService = RestaurantSyncService(fetcher, repository)
+
     // Reitit
     routing {
 //        restaurantRoutes(services)
 //        testRoutes(database)
-        restaurantRoutes2(service)
+//        restaurantRoutes2(service)
+        configureFetchingRoutes(syncService)
     }
 }
