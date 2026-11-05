@@ -76,7 +76,6 @@ fun HomePage() {
 
         Box(
             modifier = Modifier
-                .padding(innerPadding)
                 .fillMaxSize()
         ) {
             // Tämän voisi varmaan siirtää App.kt tiedoston sisään jolloin tämä olisi toteutettu loogisemmin
