@@ -2,7 +2,10 @@ package com.ruokkis
 
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -54,51 +57,80 @@ fun HomePage() {
         mutableStateOf(setOf<String>())
     }
 
+    var selectedPage by rememberSaveable {
+        mutableStateOf("home")
+    }
+
     Scaffold(
         topBar = {
             TopBar()
         },
         bottomBar = {
-            BottomBar()
-        },
-        ) { innerPadding -> //Miksi?
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding).verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-
-            ) {
-
-            /**
-             * annetaan filterTagBoxille nämä argumentit, jotta näiden vaikutus saadaan myös muille
-             * jotka riippuvat filtteröinneistä
-             */
-            FilterTagBox(
-                searchQuery = searchQuery,
-                onSearchQueryChange = { searchQuery = it },
-                selectedFilters = selectedFilters,
-                onSelectedFiltersChange = {
-                    selectedFilters = it
-                }
+            BottomBar(
+                onFoodsViewClick = { selectedPage = "foods" },
+                onHomeClick = { selectedPage = "home" },
+                onRestaurantsClick = { selectedPage = "restaurants" }
             )
+        }
+    ) { innerPadding -> //Miksi?
 
-            DayChooserBox() //TODO Riviksi, lisää la + su
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        ) {
+            // Tämän voisi varmaan siirtää App.kt tiedoston sisään jolloin tämä olisi toteutettu loogisemmin
+            // tällöin mukaan tulisi varmaan myös scaffold sisältöinen ja tähän tiedostoon jäisi vain column ja sen sisäinen toteutus
+            when (selectedPage) {
+                "home" -> {
+                    Column(
+                        modifier = Modifier
+                            .padding(innerPadding).verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
 
-            HorizontalDivider(thickness = 2.dp)
+                    ) {
 
-            RestaurantCards() //TODO Tee pohja, Hae tiedot
+                        /**
+                         * annetaan filterTagBoxille nämä argumentit, jotta näiden vaikutus saadaan myös muille
+                         * jotka riippuvat filtteröinneistä
+                         */
+                        FilterTagBox(
+                            searchQuery = searchQuery,
+                            onSearchQueryChange = { searchQuery = it },
+                            selectedFilters = selectedFilters,
+                            onSelectedFiltersChange = {
+                                selectedFilters = it
+                            }
+                        )
+
+                        DayChooserBox() //TODO Riviksi, lisää la + su
+
+                        HorizontalDivider(thickness = 2.dp)
+
+                        RestaurantCards() //TODO Tee pohja, Hae tiedot
 
 
-            Button(onClick = {
-                scope.launch {
-                    piato.value = foodListApi.getWeek("piato")
+                        Button(onClick = {
+                            scope.launch {
+                                piato.value = foodListApi.getWeek("piato")
+                            }
+                        }) {
+                            Text("Get Restaurant")
+                        }
+                        piato?.let { menu ->
+                            Text(menu.toString())
+                        }
+                    }
                 }
-            }) {
-                Text("Get Restaurant")
-            }
-            piato?.let { menu ->
-                    Text(menu.toString())
+
+                "foods" -> {
+                    FoodsView()
+                }
+
+                "restaurants" -> {
+                    //TODO: Kunhan saadaan ravintoloiden sivu valmiiksi lisätään sekin tähän samoin kuin yllä
+                }
             }
         }
     }
