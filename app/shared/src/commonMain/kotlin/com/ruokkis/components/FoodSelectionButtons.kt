@@ -1,6 +1,7 @@
 package com.ruokkis.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -21,15 +22,29 @@ fun FooSelectionButtons(
         SegmentedButton(
             selected = selectedOption == "Kaikki",
             onClick = { onOptionSelected("Kaikki") },
-            shape = SegmentedButtonDefaults.itemShape(1, 4)
-        ) {
+            shape = SegmentedButtonDefaults.itemShape(1, 4),
+            colors = SegmentedButtonDefaults.colors(
+                activeContainerColor = MaterialTheme.colorScheme.secondary,
+                activeContentColor = MaterialTheme.colorScheme.onPrimary,
+                inactiveContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                inactiveContentColor = MaterialTheme.colorScheme.onSecondaryContainer
+            ),
+            icon = {}
+            ) {
             Text("Kaikki ruoat")
         }
 
         SegmentedButton(
             selected = selectedOption == "Lemmpparit",
             onClick = { onOptionSelected("Lemmpparit") },
-            shape = SegmentedButtonDefaults.itemShape(2, 4)
+            shape = SegmentedButtonDefaults.itemShape(2, 4),
+            colors = SegmentedButtonDefaults.colors(
+                activeContainerColor = MaterialTheme.colorScheme.secondary,
+                activeContentColor = MaterialTheme.colorScheme.onPrimary,
+                inactiveContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                inactiveContentColor = MaterialTheme.colorScheme.onSecondaryContainer
+            ),
+            icon = {}
         ) {
             Text("Lempi Ruoat")
         }
