@@ -57,80 +57,43 @@ fun HomePage() {
         mutableStateOf(setOf<String>())
     }
 
-    var selectedPage by rememberSaveable {
-        mutableStateOf("home")
-    }
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
 
-    Scaffold(
-        topBar = {
-            TopBar()
-        },
-        bottomBar = {
-            BottomBar(
-                onFoodsViewClick = { selectedPage = "foods" },
-                onHomeClick = { selectedPage = "home" },
-                onRestaurantsClick = { selectedPage = "restaurants" }
-            )
-        }
-    ) { innerPadding -> //Miksi?
+    ) {
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            // Tämän voisi varmaan siirtää App.kt tiedoston sisään jolloin tämä olisi toteutettu loogisemmin
-            // tällöin mukaan tulisi varmaan myös scaffold sisältöinen ja tähän tiedostoon jäisi vain column ja sen sisäinen toteutus
-            when (selectedPage) {
-                "home" -> {
-                    Column(
-                        modifier = Modifier
-                            .padding(innerPadding).verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-
-                    ) {
-
-                        /**
-                         * annetaan filterTagBoxille nämä argumentit, jotta näiden vaikutus saadaan myös muille
-                         * jotka riippuvat filtteröinneistä
-                         */
-                        FilterTagBox(
-                            searchQuery = searchQuery,
-                            onSearchQueryChange = { searchQuery = it },
-                            selectedFilters = selectedFilters,
-                            onSelectedFiltersChange = {
-                                selectedFilters = it
-                            }
-                        )
-
-                        DayChooserBox() //TODO Riviksi, lisää la + su
-
-                        HorizontalDivider(thickness = 2.dp)
-
-                        RestaurantCards() //TODO Tee pohja, Hae tiedot
-
-
-                        Button(onClick = {
-                            scope.launch {
-                                piato.value = foodListApi.getWeek("piato")
-                            }
-                        }) {
-                            Text("Get Restaurant")
-                        }
-                        piato?.let { menu ->
-                            Text(menu.toString())
-                        }
-                    }
-                }
-
-                "foods" -> {
-                    FoodsView()
-                }
-
-                "restaurants" -> {
-                    //TODO: Kunhan saadaan ravintoloiden sivu valmiiksi lisätään sekin tähän samoin kuin yllä
-                }
+        /**
+         * annetaan filterTagBoxille nämä argumentit, jotta näiden vaikutus saadaan myös muille
+         * jotka riippuvat filtteröinneistä
+         */
+        FilterTagBox(
+            searchQuery = searchQuery,
+            onSearchQueryChange = { searchQuery = it },
+            selectedFilters = selectedFilters,
+            onSelectedFiltersChange = {
+                selectedFilters = it
             }
+        )
+
+        DayChooserBox() //TODO Riviksi, lisää la + su
+
+        HorizontalDivider(thickness = 2.dp)
+
+        RestaurantCards() //TODO Tee pohja, Hae tiedot
+
+
+        Button(onClick = {
+            scope.launch {
+                piato.value = foodListApi.getWeek("piato")
+            }
+        }) {
+            Text("Get Restaurant")
+        }
+        piato?.let { menu ->
+            Text(menu.toString())
         }
     }
 }

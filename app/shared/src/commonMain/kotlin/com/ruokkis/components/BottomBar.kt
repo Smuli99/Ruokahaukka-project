@@ -26,7 +26,7 @@ import ruokkis.app.shared.generated.resources.home
 fun BottomBar(
     onFoodsViewClick: () -> Unit = {},
     onHomeClick: () -> Unit = {},
-    onRestaurantsClick: () -> Unit = {}
+    onRestaurantsViewClick: () -> Unit = {}
 ) {
     BottomAppBar(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -56,8 +56,7 @@ fun BottomBar(
 
 
             }
-            Button(onClick = {/**/} //TODO: Napista painamalla siirtyy lempparit sivustolle
-            ){
+            Button(onClick = onRestaurantsViewClick){
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
