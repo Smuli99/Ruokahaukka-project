@@ -20,8 +20,8 @@ fun FooSelectionButtons(
         modifier = Modifier.fillMaxWidth()
     ) {
         SegmentedButton(
-            selected = selectedOption == "Kaikki",
-            onClick = { onOptionSelected("Kaikki") },
+            selected = selectedOption == "all",
+            onClick = { onOptionSelected("all") },
             shape = SegmentedButtonDefaults.itemShape(1, 4),
             colors = SegmentedButtonDefaults.colors(
                 activeContainerColor = MaterialTheme.colorScheme.secondary,
@@ -35,8 +35,8 @@ fun FooSelectionButtons(
         }
 
         SegmentedButton(
-            selected = selectedOption == "Lemmpparit",
-            onClick = { onOptionSelected("Lemmpparit") },
+            selected = selectedOption == "favourites",
+            onClick = { onOptionSelected("favourites") },
             shape = SegmentedButtonDefaults.itemShape(2, 4),
             colors = SegmentedButtonDefaults.colors(
                 activeContainerColor = MaterialTheme.colorScheme.secondary,
