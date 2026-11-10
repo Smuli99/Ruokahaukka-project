@@ -40,11 +40,6 @@ fun FoodsView() {
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var expanded by rememberSaveable { mutableStateOf(false) }
 
-    //esimerkki ruokia testaukseen
-    val searchResults = listOf("Pizza", "Makaroonilaatikko", "safkaa").filter {
-        it.contains(searchQuery, ignoreCase = true)
-    }
-
     //Tallennetaan filtteröinti valinta kaikista ruoista vai vain lemppareista
     var selectedOption by rememberSaveable {
         mutableStateOf("all")
