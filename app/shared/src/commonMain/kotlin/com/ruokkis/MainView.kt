@@ -2,7 +2,10 @@ package com.ruokkis
 
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -54,52 +57,43 @@ fun HomePage() {
         mutableStateOf(setOf<String>())
     }
 
-    Scaffold(
-        topBar = {
-            TopBar()
-        },
-        bottomBar = {
-            BottomBar()
-        },
-        ) { innerPadding -> //Miksi?
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding).verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
 
-            ) {
+    ) {
 
-            /**
-             * annetaan filterTagBoxille nämä argumentit, jotta näiden vaikutus saadaan myös muille
-             * jotka riippuvat filtteröinneistä
-             */
-            FilterTagBox(
-                searchQuery = searchQuery,
-                onSearchQueryChange = { searchQuery = it },
-                selectedFilters = selectedFilters,
-                onSelectedFiltersChange = {
-                    selectedFilters = it
-                }
-            )
-
-            DayChooserBox() //TODO Riviksi, lisää la + su
-
-            HorizontalDivider(thickness = 2.dp)
-
-            RestaurantCards() //TODO Tee pohja, Hae tiedot
-
-
-            Button(onClick = {
-                scope.launch {
-                    piato.value = foodListApi.getWeek("piato")
-                }
-            }) {
-                Text("Get Restaurant")
+        /**
+         * annetaan filterTagBoxille nämä argumentit, jotta näiden vaikutus saadaan myös muille
+         * jotka riippuvat filtteröinneistä
+         */
+        FilterTagBox(
+            searchQuery = searchQuery,
+            onSearchQueryChange = { searchQuery = it },
+            selectedFilters = selectedFilters,
+            onSelectedFiltersChange = {
+                selectedFilters = it
             }
-            piato?.let { menu ->
-                    Text(menu.toString())
+        )
+
+        DayChooserBox() //TODO Riviksi, lisää la + su
+
+        HorizontalDivider(thickness = 2.dp)
+
+        RestaurantCards() //TODO Tee pohja, Hae tiedot
+
+
+        Button(onClick = {
+            scope.launch {
+                piato.value = foodListApi.getWeek("piato")
             }
+        }) {
+            Text("Get Restaurant")
+        }
+        piato?.let { menu ->
+            Text(menu.toString())
         }
     }
 }

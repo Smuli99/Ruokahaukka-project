@@ -23,7 +23,11 @@ import ruokkis.app.shared.generated.resources.home
 
 @Composable
 @Preview
-fun BottomBar() {
+fun BottomBar(
+    onFoodsViewClick: () -> Unit = {},
+    onHomeClick: () -> Unit = {},
+    onRestaurantsViewClick: () -> Unit = {}
+) {
     BottomAppBar(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.primary,
@@ -33,19 +37,11 @@ fun BottomBar() {
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ){
-
-
-
-
-            Button(
-                onClick = { /**/}
-            ){
-                Text("upeeta")
+            Button(onClick = onFoodsViewClick){
+                Text("Ruoat")
             }
 
-            Button(
-                onClick = { /**/} //TODO: Napista painamalla avaa koti sivun / palaa siihen
-            ){
+            Button(onClick = onHomeClick){
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
@@ -60,8 +56,7 @@ fun BottomBar() {
 
 
             }
-            Button(onClick = {/**/} //TODO: Napista painamalla siirtyy lempparit sivustolle
-            ){
+            Button(onClick = onRestaurantsViewClick){
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
