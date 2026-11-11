@@ -23,26 +23,26 @@ import androidx.compose.ui.unit.sp
 @Composable
 @Preview
 fun RestaurantsView() {
-    // kovakoodattu pari ravintolaa
-    // tässä vasta tekstinä
+    // tässä vasta tekstinä lopussa jotenkin id:n kautta nimet ja aukioloajat ??
     val restaurants = listOf("Belvedere", "Bistro", "Ilokivi", "Lozzi", "Rentukka", "Syke", "Taide", "Uno", "Ylistö")
+    val openingHours = listOf("8.00 - 16.00", "10.30 - 13.00", "9.00 - 16.15", "10.30 - 18.00", "11.00 - 19.00", "11.00 - 13.30", "10.30 - 18.00", "10.30 - 14.00", "10.30 - 14.30")
 
     // Tallennetaan muistiin, mitkä ravintolat ovat suosikkeja (avaimena ravintolan nimi, arvona totuusarvo)
     val favorites = remember { mutableStateMapOf<String, Boolean>() }
 
     // pystysuuntainen lista, piirtää alkiot ruudulle
-    LazyColumn(
+    LazyColumn( // Columnista kevyempi versio
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         // Looppi tekee jokaisesta ravintolasta oman boksin LazyColumnin sisään
-        for (name in restaurants) {
+        for (i in restaurants.indices) {
+            val name = restaurants[i]
+            val hours = openingHours[i]
+            val isFavorite = favorites[name] == true // Tarkistetaanko onko tämä ravintola suosikki (oletuksena false)
             item {
-                // Tarkistetaanko onko tämä ravintola suosikki (oletuksena false)
-                val isFavorite = favorites[name] == true
-
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
@@ -60,6 +60,12 @@ fun RestaurantsView() {
                         Text(
                             text = name,
                             style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        // Ravintolan aukioloaika (pienempi fontti)
+                        Text(
+                            text = " $hours",
+                            style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurface
                         )
 
