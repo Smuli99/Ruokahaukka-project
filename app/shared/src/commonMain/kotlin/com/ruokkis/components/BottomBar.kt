@@ -66,7 +66,7 @@ fun BottomBar(
                         modifier = Modifier.size(24.dp),
                         contentScale = ContentScale.Fit
                     )
-                    Text("Lempparit")
+                    Text("Ravintolat")
                 }
 
 
