@@ -83,7 +83,6 @@ fun Route.configureRestaurantRoutes(
 
                 val restaurantInfo = service.findById(id)
 
-
                 if (restaurantInfo == null) {
                     call.respond(HttpStatusCode.BadRequest, "Restaurant wasnt found")
                     return@get
@@ -98,8 +97,29 @@ fun Route.configureRestaurantRoutes(
                 // voisi ottaa parametrina kentän nimen jota muutetaan, jos ei löydy badRequest
             }
 
+
+            //Poistaa ravintolan tiedot id:n perusteella
             delete() {
-                // TODO voi poistaa tietyn ravintolan id:n perusteella
+
+                val idString = call.parameters["id"]
+
+                if (idString == null) {
+                    call.respond(HttpStatusCode.BadRequest, "Id is empty")
+                    return@delete
+                }
+
+                val id = try { //Yritetään muuttaa String id UUID muotoon
+                    UUID.fromString(idString) // Muuttaa saadun idn stringistä UUID -> toimii lopuissa
+                }catch (e: IllegalArgumentException) {
+                    call.respond(HttpStatusCode.BadRequest, "Invalid UUID") //Heittää error coce 400 + ton msg käyttäjälle, jso ei toimi
+                    return@delete // jotta lähetään pois
+                }
+
+                val restaurantDeleted = service.deleteById(id) //palauttaa true, jos poistaminen onnistui, false jos ei
+
+                if (restaurantDeleted) call.respond(HttpStatusCode.NoContent, "Deleted succesfully")
+                else call.respond(HttpStatusCode.InternalServerError, "Failed to delete")
+
             }
 
             // /restaurants/{id}/menu

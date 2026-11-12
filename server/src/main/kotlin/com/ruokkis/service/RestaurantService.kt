@@ -24,6 +24,10 @@ class RestaurantService(
         return restaurantRepository.findById(id)
     }
 
+    suspend fun deleteById(id: UUID): Boolean {
+        return restaurantRepository.deleteById(id)
+    }
+
     // Luodaan uusi ravintola
     suspend fun createRestaurant(restaurant: NewRestaurantMenu): Restaurant? {
         if (restaurantRepository.existsByName(restaurant.name)) return null

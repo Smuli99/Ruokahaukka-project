@@ -16,12 +16,14 @@ interface RestaurantRepository {
     suspend fun findAll(): List<Restaurant>
     suspend fun create(restaurant: NewRestaurantMenu): Restaurant
     suspend fun existsByName(name: String): Boolean
+    suspend fun existsById(id: UUID): Boolean
     suspend fun findByName(name: String): Restaurant?
     suspend fun findWeekMenu(restaurantId: String, weekStart: LocalDate): WeekMenu?
     suspend fun createWeekMenu(restaurantId: String, menu: NewWeekMenu): String
 
-    //suspend fun findRestaurantInfo(restaurant: )
+
      suspend fun findById(id: UUID): Restaurant?
+     suspend fun deleteById(id: UUID): Boolean
 //    suspend fun update(restaurant: Restaurant): Restaurant
 //    suspend fun delete(restaurant: Restaurant): Boolean
 }
