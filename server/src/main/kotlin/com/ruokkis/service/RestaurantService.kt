@@ -2,7 +2,9 @@ package com.ruokkis.service
 
 import com.ruokkis.models.NewRestaurantMenu
 import com.ruokkis.models.Restaurant
+import com.ruokkis.models.WeekMenu
 import com.ruokkis.repository.RestaurantRepository
+import kotlinx.datetime.LocalDate
 import java.util.UUID
 
 /**
@@ -26,6 +28,10 @@ class RestaurantService(
 
     suspend fun deleteById(id: UUID): Boolean {
         return restaurantRepository.deleteById(id)
+    }
+
+    suspend fun findWeekMenu(restaurantId: UUID, weekStart: LocalDate): WeekMenu? {
+        return restaurantRepository.findWeekMenu(restaurantId, weekStart)
     }
 
     // Luodaan uusi ravintola

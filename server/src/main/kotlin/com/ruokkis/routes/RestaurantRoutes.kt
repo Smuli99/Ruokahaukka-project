@@ -13,7 +13,11 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
 import java.util.UUID
+import kotlin.time.Clock
 
 
 fun Route.configureRestaurantRoutes(
@@ -93,6 +97,8 @@ fun Route.configureRestaurantRoutes(
             }
 
             put() {
+
+                //TODO
                 // update voisi olla hyvä, jos haluaa muuttaa jotakin, kenttää esim campus, jos tyhjä,
                 // voisi ottaa parametrina kentän nimen jota muutetaan, jos ei löydy badRequest
             }
@@ -126,7 +132,32 @@ fun Route.configureRestaurantRoutes(
             route("/menu") {
 
                 get() {
-                    // TODO palauttaa viikkomenun
+
+                    val idString = call.parameters["id"]
+
+                    if (idString == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Id is empty")
+                        return@get
+                    }
+
+                    val id = try { //Yritetään muuttaa String id UUID muotoon
+                        UUID.fromString(idString) // Muuttaa saadun idn stringistä UUID -> toimii lopuissa
+                    }catch (e: IllegalArgumentException) {
+                        call.respond(HttpStatusCode.BadRequest, "Invalid UUID") //Heittää error coce 400 + ton msg käyttäjälle, jso ei toimi
+                        return@get // jotta lähetään pois
+                    }
+
+
+                    val localDate = Clock.System.todayIn(TimeZone.currentSystemDefault()) //LocalDare on erimuoto? Ei käy, eikä javanomakaa, ent tiiä onks tää järkevin
+                    val weekMenu = service.findWeekMenu(id, localDate) //return WeekMenu
+
+
+                    if (weekMenu == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Menu wasnt found")
+                        return@get
+                    }
+
+                    call.respond(weekMenu)
                 }
 
                 delete(){
