@@ -41,7 +41,7 @@ fun App() {
                 when (selectedPage) {
                     "home" -> HomePage()
                     "foods" -> FoodsView()
-                    "restaurants" -> {}//TODO: Kunhan saadaan ravintoloiden sivu valmiiksi lisätään sekin tähän samoin kuin yllä
+                    "restaurants" -> RestaurantsView()
 
                 }
             }
