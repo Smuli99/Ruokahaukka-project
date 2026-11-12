@@ -30,7 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ruokkis.components.FooSelectionButtons
+import com.ruokkis.components.FoodSelectionButtons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -147,7 +147,7 @@ fun FoodsView() {
             }
         }
 
-        FooSelectionButtons(
+        FoodSelectionButtons(
             selectedOption = selectedOption,
             onOptionSelected = { selectedOption = it}
         )
