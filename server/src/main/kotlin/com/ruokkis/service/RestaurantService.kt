@@ -3,6 +3,7 @@ package com.ruokkis.service
 import com.ruokkis.models.NewRestaurantMenu
 import com.ruokkis.models.Restaurant
 import com.ruokkis.repository.RestaurantRepository
+import java.util.UUID
 
 /**
  * Luokka kommunikoi Routejen ja Repositoryn välillä.
@@ -18,11 +19,11 @@ class RestaurantService(
         return restaurantRepository.findAll()
     }
 
-//    // Haetaan tietty ravintola
-//    suspend fun getRestaurant(id: UUID): Restaurant? {
-//        // TODO
-//    }
-//
+
+    suspend fun findById(id: UUID): Restaurant? {
+        return restaurantRepository.findById(id)
+    }
+
     // Luodaan uusi ravintola
     suspend fun createRestaurant(restaurant: NewRestaurantMenu): Restaurant? {
         if (restaurantRepository.existsByName(restaurant.name)) return null

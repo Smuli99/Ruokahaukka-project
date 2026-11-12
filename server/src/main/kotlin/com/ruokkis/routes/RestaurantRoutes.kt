@@ -1,5 +1,6 @@
 package com.ruokkis.routes
 
+import com.ruokkis.database.tables.AllergyTable.id
 import com.ruokkis.models.NewRestaurantMenu
 import com.ruokkis.models.Restaurant
 import com.ruokkis.service.RestaurantService
@@ -12,6 +13,7 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
+import java.util.UUID
 
 
 fun Route.configureRestaurantRoutes(
@@ -61,8 +63,34 @@ fun Route.configureRestaurantRoutes(
         // /restaurants/{id} haetaan esim tietyn ravintolan tiedot
         route("/{id}") {
 
+
+            //Hakee tietyn ravintolan tiedot tietokannasta id:n perusteella
             get() {
-                // TODO hae tietyn ravintolan tiedot tietokannasta id:n perusteella
+
+                val idString = call.parameters["id"]
+
+                if (idString == null) {
+                    call.respond(HttpStatusCode.BadRequest, "Id is empty")
+                    return@get
+                }
+
+                val id = try { //Yritetään muuttaa String id UUID muotoon
+                     UUID.fromString(idString) // Muuttaa saadun idn stringistä UUID -> toimii lopuissa
+                }catch (e: IllegalArgumentException) {
+                    call.respond(HttpStatusCode.BadRequest, "Invalid UUID") //Heittää error coce 400 + ton msg käyttäjälle, jso ei toimi
+                    return@get // jotta lähetään pois
+                }
+
+                val restaurantInfo = service.findById(id)
+
+
+                if (restaurantInfo == null) {
+                    call.respond(HttpStatusCode.BadRequest, "Restaurant wasnt found")
+                    return@get
+                }
+
+                call.respond(restaurantInfo)
+
             }
 
             put() {
@@ -79,6 +107,10 @@ fun Route.configureRestaurantRoutes(
 
                 get() {
                     // TODO palauttaa viikkomenun
+                }
+
+                delete(){
+                    //TODO poistaa viikkomenun
                 }
 
                 // /restaurants/{id}/menu/today

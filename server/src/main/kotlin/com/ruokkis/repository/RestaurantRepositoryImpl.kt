@@ -70,6 +70,19 @@ class RestaurantRepositoryImpl(
         }
     }
 
+    //Etsitään ravintola id:n mukaan
+    override suspend fun findById(id: UUID): Restaurant?{
+        return database.dbQuery {
+            RestaurantTable
+                .selectAll()
+                .where{
+                    RestaurantTable.id eq  (id)
+                }
+                .singleOrNull()
+                ?.toRestaurant()
+        }
+    }
+
     override suspend fun create(restaurant: NewRestaurantMenu): Restaurant =
         database.dbQuery {
             val result = RestaurantTable.insert {
