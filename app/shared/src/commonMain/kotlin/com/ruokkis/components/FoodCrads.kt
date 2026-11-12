@@ -21,7 +21,7 @@ fun FoodCards() {
                     .padding(5.dp)
                     .fillMaxSize()
             ){
-                Text(text = "ruoan tyyppi")
+                Text(text = "ruoan tyyppi, eli esim from the table tai lounas tai from the grill")
             }
         }
     }
