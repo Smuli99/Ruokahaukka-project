@@ -8,6 +8,7 @@ import com.ruokkis.models.SyncResult
 import com.ruokkis.repository.RestaurantRepository
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import java.util.UUID
 
 /**
  * Hoitaa logiikan, verkosta haettavan datan lisäykselle

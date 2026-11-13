@@ -30,7 +30,7 @@ class RestaurantService(
         return restaurantRepository.deleteById(id)
     }
 
-    suspend fun findWeekMenu(restaurantId: UUID, weekStart: LocalDate): WeekMenu? {
+    suspend fun findWeekMenu(restaurantId: String, weekStart: LocalDate): WeekMenu? {
         return restaurantRepository.findWeekMenu(restaurantId, weekStart)
     }
 

@@ -16,6 +16,7 @@ import io.ktor.server.routing.route
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
+import java.util.Objects.toString
 import java.util.UUID
 import kotlin.time.Clock
 
@@ -149,7 +150,10 @@ fun Route.configureRestaurantRoutes(
 
 
                     val localDate = Clock.System.todayIn(TimeZone.currentSystemDefault()) //LocalDare on erimuoto? Ei käy, eikä javanomakaa, ent tiiä onks tää järkevin
-                    val weekMenu = service.findWeekMenu(id, localDate) //return WeekMenu
+
+                   //Muutettu id to String, alkuperänen käytti UUID, mut findWeekMenua käyttää nii moni et tää on helpompi korjata
+                    //En tiiä kannattaisko toi olemassaolon chekkaus muuttaa, mut toimii nii antaa olla?
+                    val weekMenu = service.findWeekMenu(toString(id), localDate) //return WeekMenu
 
 
                     if (weekMenu == null) {

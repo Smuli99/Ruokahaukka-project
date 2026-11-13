@@ -174,12 +174,12 @@ class RestaurantRepositoryImpl(
         }
 
     //muutettu käyttämään restaurant  id:tä nimen sijaan
-    override suspend fun findWeekMenu(restaurantId: UUID, weekStart: LocalDate): WeekMenu? {
+    override suspend fun findWeekMenu(restaurantId: String, weekStart: LocalDate): WeekMenu? {
         return database.dbQuery {
             WeekMenuTable
                 .selectAll()
                 .where {
-                    (WeekMenuTable.restaurantId eq restaurantId) and
+                    (WeekMenuTable.restaurantId eq UUID.fromString(restaurantId)) and
                     (WeekMenuTable.weekStart eq weekStart)
                 }
                 .singleOrNull()
