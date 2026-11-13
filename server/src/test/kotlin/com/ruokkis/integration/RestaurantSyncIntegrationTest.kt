@@ -87,7 +87,7 @@ class RestaurantSyncIntegrationTest {
     }
 
     @Test
-    fun `next week for an existing restaurant reuses restaurant and foods`() = runTest {
+    fun `next week for an existing restaurant reuses restaurant and foods, and replaces week menu table`() = runTest {
         coEvery { fetcher.fetch(source) } returns buildMenu(LocalDate(2026, 11, 2))
         service.syncRestaurantMenu(source)
 
@@ -96,7 +96,7 @@ class RestaurantSyncIntegrationTest {
 
         assertEquals(true, result.weekCreated)
         assertEquals(1, count(RestaurantTable))
-        assertEquals(2, count(WeekMenuTable))
+        assertEquals(1, count(WeekMenuTable))
         assertEquals(3, count(FoodTable))           // samat ruoat, ei uusia rivejä
     }
 

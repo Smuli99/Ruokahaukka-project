@@ -19,6 +19,7 @@ import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.lowerCase
 import org.jetbrains.exposed.v1.datetime.date
+import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.insertAndGetId
 import org.jetbrains.exposed.v1.jdbc.select
@@ -94,8 +95,13 @@ class RestaurantRepositoryImpl(
 
     override suspend fun createWeekMenu(restaurantId: String, menu: NewWeekMenu): String =
         database.dbQuery {
+            val restaurantUuid = UUID.fromString(restaurantId)
+
+            // Poistetaan vanha viikkomenu (jos olemassa)
+            WeekMenuTable.deleteWhere { WeekMenuTable.restaurantId eq restaurantUuid }
+
             val weekId = WeekMenuTable.insertAndGetId {
-                it[WeekMenuTable.restaurantId] = UUID.fromString(restaurantId)
+                it[WeekMenuTable.restaurantId] = restaurantUuid
                 it[WeekMenuTable.weekStart] = menu.weekStart
             }
 
