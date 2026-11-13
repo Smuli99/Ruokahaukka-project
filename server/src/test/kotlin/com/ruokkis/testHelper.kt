@@ -1,4 +1,4 @@
-package com.ruokkis.integration
+package com.ruokkis
 
 import com.ruokkis.models.NewDayMenu
 import com.ruokkis.models.NewFood
@@ -10,10 +10,13 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
 
 // Riisiä esiintyy molempina päivinä, jotta voidaan testata ruoan uudelleenkäyttö
-fun buildMenu(weekStart: LocalDate = LocalDate(2026, 11, 2)) = NewRestaurantMenu(
-    name = "Ilokivi",
-    url = "https://www.semma.fi/ravintolat/seminaarinmaki/ilokivi/",
-    campus = "Seminaarinmäki",
+fun buildMenu(
+    name: String = "Ilokivi", url: String = "https://example.com", campus: String? = "Seminaarinmäki",
+    weekStart: LocalDate = LocalDate(2026, 11, 2)
+) = NewRestaurantMenu(
+    name = name,
+    url = url,
+    campus = campus,
     weekMenu = NewWeekMenu(
         weekStart = weekStart,
         days = listOf(
