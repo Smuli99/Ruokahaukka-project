@@ -37,4 +37,16 @@ class RestaurantSyncService(
             SyncResult(restaurant, weekCreated = true)
         }
     }
+
+    suspend fun syncAll(sources: List<RestaurantSource>): List<SyncResult> {
+        val results = mutableListOf<SyncResult>()
+        for (source in sources) {
+            try {
+                results += syncRestaurantMenu(source)
+            } catch (e: Exception) {
+                println("Haku epäonnistui ravintolalle '$source': ${e.message}")
+            }
+        }
+        return results
+    }
 }
