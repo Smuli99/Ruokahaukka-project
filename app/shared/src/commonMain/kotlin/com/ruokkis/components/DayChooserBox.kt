@@ -57,7 +57,7 @@ fun DayChooserBox() {
                     onClick = {
                         selectedDay = if (index == 0) -1 else index
                     },
-                    selected = (index == 0 && selectedDay == -1) || index == selectedDay,
+                    selected = selectedDay == -1 || index == selectedDay,
                     label = { Text(label) }
                 )
             }
