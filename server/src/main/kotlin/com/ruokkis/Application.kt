@@ -1,9 +1,15 @@
 package com.ruokkis
 
-import com.ruokkis.service.HttpRestaurantService
+import com.ruokkis.client.RestaurantFetcher
+import com.ruokkis.config.RestaurantDataSources
 import com.ruokkis.service.RestaurantNotFoundException
 import com.ruokkis.service.UpstreamException
-import com.ruokkis.service.restaurantRoutes
+import com.ruokkis.database.AppDatabaseImpl
+import com.ruokkis.repository.RestaurantRepositoryImpl
+import com.ruokkis.routes.configureFetchingRoutes
+import com.ruokkis.routes.configureRestaurantRoutes
+import com.ruokkis.service.RestaurantService
+import com.ruokkis.service.RestaurantSyncService
 import io.ktor.client.*
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.*
@@ -17,6 +23,8 @@ import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 /**
@@ -40,6 +48,10 @@ fun main() {
  * 4. Lisätään reitit
  */
 fun Application.module(engine: HttpClientEngine = CIO.create()) {
+    val database = AppDatabaseImpl()
+    val repository = RestaurantRepositoryImpl(database)
+    val service = RestaurantService(repository)
+
     val client = HttpClient(engine) {
         install(ClientContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
@@ -48,60 +60,6 @@ fun Application.module(engine: HttpClientEngine = CIO.create()) {
 
     // Kun palvelin sammuu suljetaan HttpClient, jotta avoimet yhteydet ja säikeet vapautuu
     monitor.subscribe(ApplicationStopped) { client.close() }
-
-    // Ravintolat -> tähän voi lisätä uusia
-    val services = listOf(
-        HttpRestaurantService(
-            id = "piato",
-            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1408&language=fi",
-            client = client,
-        ),
-        HttpRestaurantService(
-            id = "lozzi",
-            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1401&language=fi",
-            client = client,
-        ),
-        HttpRestaurantService(
-            id = "ilokivi",
-            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1419&language=fi",
-            client = client,
-        ),
-        HttpRestaurantService(
-            id = "uno",
-            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1414&language=fi",
-            client = client,
-        ),
-        HttpRestaurantService(
-            id = "ylisto", // kirjoitettu o:lla ö:n sijasta
-            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1403&language=fi",
-            client = client,
-        ),
-        HttpRestaurantService(
-            id = "rentukka", // kahvila
-            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1416&language=fi",
-            client = client,
-        ),
-        HttpRestaurantService(
-            id = "belvedere", // kahvila
-            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1404&language=fi",
-            client = client,
-        ),
-        HttpRestaurantService(
-            id = "syke", // kahvila
-            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1405&language=fi",
-            client = client,
-        ),
-        HttpRestaurantService(
-            id = "taide", // Sisältää myös kahvila Tieteen (Kirjasto Lähde)
-            url = "https://www.compass-group.fi/menuapi/feed/json?costNumber=0301&language=fi",
-            client = client,
-        ),
-        HttpRestaurantService(
-            id = "bistro",
-            url = "https://www.compass-group.fi/menuapi/feed/json?costNumber=3081&language=fi",
-            client = client,
-        ),
-    ).associateBy { it.id } // mutetaan Mapiksi ("piato" to HttpRestaurantService(...))
 
 
     install(ContentNegotiation) { json() }
@@ -116,8 +74,19 @@ fun Application.module(engine: HttpClientEngine = CIO.create()) {
         }
     }
 
+    val fetcher = RestaurantFetcher(client)
+    val syncService = RestaurantSyncService(fetcher, repository)
+
+    // Haetaan ravintoloiden viikko menut kun sovellus käynnistynyt
+    monitor.subscribe(ApplicationStarted) {
+        launch(Dispatchers.IO) {
+            syncService.syncAll(RestaurantDataSources.all)
+        }
+    }
+
     // Reitit
     routing {
-        restaurantRoutes(services)
+        configureRestaurantRoutes(service)
+        configureFetchingRoutes(syncService)
     }
 }
