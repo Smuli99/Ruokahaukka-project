@@ -1,6 +1,7 @@
 package com.ruokkis
 
 import com.ruokkis.client.RestaurantFetcher
+import com.ruokkis.config.RestaurantDataSources
 import com.ruokkis.service.RestaurantNotFoundException
 import com.ruokkis.service.UpstreamException
 import com.ruokkis.database.AppDatabaseImpl
@@ -22,6 +23,8 @@ import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 /**
@@ -49,7 +52,6 @@ fun Application.module(engine: HttpClientEngine = CIO.create()) {
     val repository = RestaurantRepositoryImpl(database)
     val service = RestaurantService(repository)
 
-
     val client = HttpClient(engine) {
         install(ClientContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
@@ -58,16 +60,6 @@ fun Application.module(engine: HttpClientEngine = CIO.create()) {
 
     // Kun palvelin sammuu suljetaan HttpClient, jotta avoimet yhteydet ja säikeet vapautuu
     monitor.subscribe(ApplicationStopped) { client.close() }
-
-    // tulee poistumaan
-//    // Ravintolat -> tähän voi lisätä uusia
-//    val services = listOf(
-//        HttpRestaurantService(
-//            id = "piato",
-//            url = "https://www.semma.fi/menuapi/feed/json?costNumber=1408&language=fi",
-//            client = client,
-//        ),
-//    ).associateBy { it.id } // mutetaan Mapiksi ("piato" to HttpRestaurantService(...))
 
 
     install(ContentNegotiation) { json() }
@@ -84,6 +76,13 @@ fun Application.module(engine: HttpClientEngine = CIO.create()) {
 
     val fetcher = RestaurantFetcher(client)
     val syncService = RestaurantSyncService(fetcher, repository)
+
+    // Haetaan ravintoloiden viikko menut kun sovellus käynnistynyt
+    monitor.subscribe(ApplicationStarted) {
+        launch(Dispatchers.IO) {
+            syncService.syncAll(RestaurantDataSources.all)
+        }
+    }
 
     // Reitit
     routing {
