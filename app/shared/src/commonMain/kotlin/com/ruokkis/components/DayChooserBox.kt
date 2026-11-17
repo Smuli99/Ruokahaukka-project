@@ -2,11 +2,8 @@ package com.ruokkis.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MultiChoiceSegmentedButtonRow
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -16,12 +13,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.* // lisätty
+import kotlin.time.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.isoDayNumber
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 @Preview
 fun DayChooserBox() {
 
-    var selectedIndex by remember {mutableIntStateOf(0)} //TODO: Ottaa automaattisesti tän päivän indeksin "alku" veikkaukseks
+    var selectedDay by remember {
+        mutableIntStateOf(
+            Clock.System.now()
+                .toLocalDateTime(TimeZone.currentSystemDefault())
+                .dayOfWeek.isoDayNumber
+        )
+    }
     val days = listOf("All", "Ma", "Ti", "Ke", "To", "Pe", "La", "Su")
     //korvaa All jollain väkäsellä
     //Pitää tehdä logiikka, jolla All -> Deslect otehrs / Select All)
@@ -37,7 +44,8 @@ fun DayChooserBox() {
                 SegmentedButton(
                     shape = SegmentedButtonDefaults.itemShape(
                         index = index,
-                        count = days.size
+                        count = days.size,
+                        baseShape = RoundedCornerShape(0.dp)
                     ),
                     icon ={},
                     colors = SegmentedButtonDefaults.colors(
@@ -46,15 +54,13 @@ fun DayChooserBox() {
                         inactiveContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                         inactiveContentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     ),
-                    onClick = { selectedIndex = index },
-                    selected = index == selectedIndex, label = { Text(label) }
-
+                    onClick = {
+                        selectedDay = if (index == 0) -1 else index
+                    },
+                    selected = selectedDay == -1 || index == selectedDay,
+                    label = { Text(label) }
                 )
-
-
             }
-
-
         }
     }
 }

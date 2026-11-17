@@ -132,7 +132,7 @@ fun FoodsView() {
             }
         }
 
-        FooSelectionButtons(
+        FoodSelectionButtons(
             selectedOption = selectedOption,
             onOptionSelected = { selectedOption = it}
         )
