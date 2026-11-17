@@ -17,8 +17,6 @@ dependencies {
     implementation(libs.ktor.serverCore)
     implementation(libs.ktor.serverNetty)
     implementation("io.ktor:ktor-server-content-negotiation:3.6.0")
-    testImplementation(libs.ktor.serverTestHost)
-    testImplementation(libs.kotlin.testJunit)
     implementation(libs.ktor.serialization.kotlinx.json.jvm)
     implementation(libs.ktor.server.content.negotiation.jvm)
     implementation(libs.ktor.server.cors.jvm)
@@ -26,4 +24,26 @@ dependencies {
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
     implementation("io.ktor:ktor-server-status-pages:3.6.0")
+//    DB
+    implementation(libs.exposed.core)
+    implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.dao)
+    implementation(libs.exposed.kotlin.datetime)
+    implementation(libs.postgresql)
+    implementation(libs.hikari.cb)
+    implementation(libs.flyway.core)
+    implementation(libs.flyway.postgresql)
+//    TEST
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.platform.launcher)
+    testImplementation(libs.h2)
+    testImplementation(libs.kotlin.test.junit5)
+    testImplementation(libs.ktor.serverTestHost)
+    testImplementation(libs.ktor.client.mock)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
