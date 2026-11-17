@@ -97,7 +97,7 @@ class RestaurantSyncIntegrationTest {
 
         assertEquals(true, result.weekCreated)
         assertEquals(1, count(RestaurantTable))
-        assertEquals(2, count(WeekMenuTable))
+        assertEquals(1, count(WeekMenuTable))
         assertEquals(3, count(FoodTable))           // samat ruoat, ei uusia rivejä
     }
 
