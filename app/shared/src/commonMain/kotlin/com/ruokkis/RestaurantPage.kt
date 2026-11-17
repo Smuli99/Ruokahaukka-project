@@ -29,8 +29,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 @Preview
 fun RestaurantPage(
-    restaurant: Restaurant, // otetaan vastaan valittu Ravintola (olio)
-    onBack: () -> Unit // Funktio, jota kutsutaan takaisin-napista
+    restaurant: Restaurant = Restaurant(1, "Belvedere", "8.00 - 16.00", "Restaurant information"), // otetaan vastaan valittu Ravintola (olio)
+    onBack: () -> Unit = {} // Funktio, jota kutsutaan takaisin-napista
 ) {
     // Muuttuja, joka pitää muistissa näytetäänkö päivän (0) vai viikon (1) näkymä
     var selectedView by remember { mutableStateOf(0) }
