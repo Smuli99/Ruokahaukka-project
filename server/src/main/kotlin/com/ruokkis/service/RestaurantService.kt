@@ -2,7 +2,10 @@ package com.ruokkis.service
 
 import com.ruokkis.models.NewRestaurantMenu
 import com.ruokkis.models.Restaurant
+import com.ruokkis.models.WeekMenu
 import com.ruokkis.repository.RestaurantRepository
+import kotlinx.datetime.LocalDate
+import java.util.UUID
 
 /**
  * Luokka kommunikoi Routejen ja Repositoryn välillä.
@@ -18,11 +21,19 @@ class RestaurantService(
         return restaurantRepository.findAll()
     }
 
-//    // Haetaan tietty ravintola
-//    suspend fun getRestaurant(id: UUID): Restaurant? {
-//        // TODO
-//    }
-//
+
+    suspend fun findById(id: UUID): Restaurant? {
+        return restaurantRepository.findById(id)
+    }
+
+    suspend fun deleteById(id: UUID): Boolean {
+        return restaurantRepository.deleteById(id)
+    }
+
+    suspend fun findWeekMenu(restaurantId: String, weekStart: LocalDate): WeekMenu? {
+        return restaurantRepository.findWeekMenu(restaurantId, weekStart)
+    }
+
     // Luodaan uusi ravintola
     suspend fun createRestaurant(restaurant: NewRestaurantMenu): Restaurant? {
         if (restaurantRepository.existsByName(restaurant.name)) return null

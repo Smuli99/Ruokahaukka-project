@@ -58,6 +58,17 @@ class RestaurantRepositoryImpl(
                 .count() > 0
         }
 
+    //Tarkistaa löytyykö ravintolaa tietokannasta, jos löytyy, palauttaa true
+    override suspend fun existsById(id: UUID): Boolean =
+        database.dbQuery {
+            RestaurantTable
+                .selectAll()
+                .where {
+                    RestaurantTable.id eq (id)
+                }
+                .count() > 0
+        }
+
     // Etsitään ravintola nimen mukaan
     override suspend fun findByName(name: String): Restaurant? {
         return database.dbQuery {
@@ -70,6 +81,32 @@ class RestaurantRepositoryImpl(
                 ?.toRestaurant()
         }
     }
+
+    //Etsitään ravintola id:n mukaan
+    override suspend fun findById(id: UUID): Restaurant?{
+        return database.dbQuery {
+            RestaurantTable
+                .selectAll()
+                .where{
+                    RestaurantTable.id eq  (id)
+                }
+                .singleOrNull()
+                ?.toRestaurant()
+        }
+    }
+
+    //Poistetaan ravintola id:n mukaan, palauttaa True jos onnistuu, False jos epäoinnistuu/ei poistettavaa
+    override suspend fun deleteById(id: UUID): Boolean  {
+        database.dbQuery {
+            RestaurantTable.deleteWhere {
+                RestaurantTable.id eq  (id)
+
+            }
+
+        }
+        return !existsById(id)  // käänteisenä, koska existsById palauttaa 1 jos on olemassa -> poisto epäonnsitu
+    }
+
 
     override suspend fun create(restaurant: NewRestaurantMenu): Restaurant =
         database.dbQuery {
@@ -141,6 +178,7 @@ class RestaurantRepositoryImpl(
             weekId.value.toString()
         }
 
+    //muutettu käyttämään restaurant  id:tä nimen sijaan
     override suspend fun findWeekMenu(restaurantId: String, weekStart: LocalDate): WeekMenu? {
         return database.dbQuery {
             WeekMenuTable
