@@ -1,5 +1,6 @@
 package com.ruokkis.integration
 
+import com.ruokkis.buildMenu
 import com.ruokkis.client.RestaurantFetcher
 import com.ruokkis.config.RestaurantSource
 import com.ruokkis.database.TestDatabase
@@ -87,11 +88,11 @@ class RestaurantSyncIntegrationTest {
     }
 
     @Test
-    fun `next week for an existing restaurant reuses restaurant and foods, and replaces week menu table`() = runTest {
-        coEvery { fetcher.fetch(source) } returns buildMenu(LocalDate(2026, 11, 2))
+    fun `next week for an existing restaurant reuses restaurant and foods`() = runTest {
+        coEvery { fetcher.fetch(source) } returns buildMenu(weekStart = LocalDate(2026, 11, 2))
         service.syncRestaurantMenu(source)
 
-        coEvery { fetcher.fetch(source) } returns buildMenu(LocalDate(2026, 11, 9))
+        coEvery { fetcher.fetch(source) } returns buildMenu(weekStart = LocalDate(2026, 11, 9))
         val result = service.syncRestaurantMenu(source)
 
         assertEquals(true, result.weekCreated)
