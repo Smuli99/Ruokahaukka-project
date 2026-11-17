@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,29 +20,29 @@ fun RestaurantCards(){
     //TODO: Tee joku pohja, ettei tartte toistaa. (dynaaminen)
     // HAe oikeesti teksti
 
-
     Card(
         colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
         modifier = Modifier
             .padding(10.dp)
             .size(width = 300.dp, height = 100.dp),
     ){
-        Text("NamNAm ruokaa")
+        Text("Piato", style = typography.titleLarge)
+        FoodCards()
     }
-    Card(
-        colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
-        modifier = Modifier
-            .padding(10.dp)
-            .size(width = 300.dp, height = 100.dp)
-    ){
-        Text("NamNAm ruokaa")
-    }
-    Card(
-        colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
-        modifier = Modifier
-            .padding(10.dp)
-            .size(width = 300.dp, height = 100.dp)
-    ){
-        Text("NamNAm ruokaa")
-    }
+//    Card(
+//        colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
+//        modifier = Modifier
+//            .padding(10.dp)
+//            .size(width = 300.dp, height = 100.dp)
+//    ){
+//        Text("NamNAm ruokaa")
+//    }
+//    Card(
+//        colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
+//        modifier = Modifier
+//            .padding(10.dp)
+//            .size(width = 300.dp, height = 100.dp)
+//    ){
+//        Text("NamNAm ruokaa")
+//    }
 }
