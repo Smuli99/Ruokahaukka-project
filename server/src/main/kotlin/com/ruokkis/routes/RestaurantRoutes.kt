@@ -1,6 +1,7 @@
 package com.ruokkis.routes
 
 import com.ruokkis.database.tables.AllergyTable.id
+import com.ruokkis.models.DayMenu
 import com.ruokkis.models.NewRestaurantMenu
 import com.ruokkis.models.Restaurant
 import com.ruokkis.service.RestaurantService
@@ -170,17 +171,112 @@ fun Route.configureRestaurantRoutes(
 
                 // /restaurants/{id}/menu/today
                 get("/today") {
-                    // TODO palauttaa tämän päivän menun
+
+
+                    //testaa onko restaurant olemassa
+                    val idString = call.parameters["id"]
+
+                    if (idString == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Id is empty")
+                        return@get
+                    }
+
+                    val id = try { //Yritetään muuttaa String id UUID muotoon
+                        UUID.fromString(idString) // Muuttaa saadun idn stringistä UUID -> toimii lopuissa
+                    }catch (e: IllegalArgumentException) {
+                        call.respond(HttpStatusCode.BadRequest, "Invalid UUID") //Heittää error coce 400 + ton msg käyttäjälle, jso ei toimi
+                        return@get // jotta lähetään pois
+                    }
+
+
+                    val localDate = Clock.System.todayIn(TimeZone.currentSystemDefault()) //LocalDare on erimuoto? Ei käy, eikä javanomakaa, ent tiiä onks tää järkevin
+
+                    val dayMenu = service.findDayMenu(toString(id), localDate)
+                    //Pitäskö localDate sijaan käyttää tota parametria?
+
+
+                    if (dayMenu == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Menu wasnt found")
+                        return@get
+                    }
+
+                    call.respond(dayMenu)
+
+
                 }
+
 
                 // /restaurants/{id}/menu/day/{weekday} esim. ke
                 get("/day/{weekday}") {
-                    // TODO hakee päivä menun viikonpäivän mukaan
+
+                    //testaa onko restaurant olemassa
+                    val idString = call.parameters["id"]
+
+                    val weekday = call.parameters["weekday"]
+
+                    if (idString == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Id is empty")
+                        return@get
+                    }
+
+                    if (weekday == null) {
+                        call.respond(HttpStatusCode.BadRequest, "No day found")
+                        return@get
+                    }
+
+                    val id = try { //Yritetään muuttaa String id UUID muotoon
+                        UUID.fromString(idString) // Muuttaa saadun idn stringistä UUID -> toimii lopuissa
+                    }catch (e: IllegalArgumentException) {
+                        call.respond(HttpStatusCode.BadRequest, "Invalid UUID") //Heittää error coce 400 + ton msg käyttäjälle, jso ei toimi
+                        return@get // jotta lähetään pois
+                    }
+
+                    val dayMenu = service.findWeekdayMenu(toString(id), weekday)
+
+
+                    if (dayMenu == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Menu wasnt found")
+                        return@get
+                    }
+
+                    call.respond(dayMenu)
+
+
                 }
 
                 // /restaurants/{id}/menu/day/{date} esim. 2026-11-05
                 get("/day/{date}") {
-                    // TODO hakee päivä menun tietyn päiväämäärän mukaan
+                    //testaa onko restaurant olemassa
+                    val idString = call.parameters["id"]
+
+                    val date = call.parameters["date"]
+
+                    if (idString == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Id is empty")
+                        return@get
+                    }
+
+                    if (date == null) {
+                        call.respond(HttpStatusCode.BadRequest, "No day found")
+                        return@get
+                    }
+
+                    val id = try { //Yritetään muuttaa String id UUID muotoon
+                        UUID.fromString(idString) // Muuttaa saadun idn stringistä UUID -> toimii lopuissa
+                    }catch (e: IllegalArgumentException) {
+                        call.respond(HttpStatusCode.BadRequest, "Invalid UUID") //Heittää error coce 400 + ton msg käyttäjälle, jso ei toimi
+                        return@get // jotta lähetään pois
+                    }
+
+                    val dayMenu = service.findDateMenu(toString(id), LocalDate.parse(date))
+
+
+                    if (dayMenu == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Menu wasnt found")
+                        return@get
+                    }
+
+                    call.respond(dayMenu)
                 }
             }
         }

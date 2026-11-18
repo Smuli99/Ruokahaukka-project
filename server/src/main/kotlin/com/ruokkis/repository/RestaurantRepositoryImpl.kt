@@ -9,6 +9,7 @@ import com.ruokkis.database.tables.MenuItemFoodTagTable
 import com.ruokkis.database.tables.MenuItemTable
 import com.ruokkis.database.tables.RestaurantTable
 import com.ruokkis.database.tables.WeekMenuTable
+import com.ruokkis.models.DayMenu
 import com.ruokkis.models.NewRestaurantMenu
 import com.ruokkis.models.NewWeekMenu
 import com.ruokkis.models.Restaurant
@@ -18,11 +19,9 @@ import org.jetbrains.exposed.v1.core.ResultRow
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.lowerCase
-import org.jetbrains.exposed.v1.datetime.date
 import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.insertAndGetId
-import org.jetbrains.exposed.v1.jdbc.select
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import java.util.UUID
 
@@ -178,7 +177,7 @@ class RestaurantRepositoryImpl(
             weekId.value.toString()
         }
 
-    //muutettu käyttämään restaurant  id:tä nimen sijaan
+
     override suspend fun findWeekMenu(restaurantId: String, weekStart: LocalDate): WeekMenu? {
         return database.dbQuery {
             WeekMenuTable
@@ -189,6 +188,50 @@ class RestaurantRepositoryImpl(
                 }
                 .singleOrNull()
                 ?.toWeekMenu()
+        }
+    }
+
+
+    //Etsii päivän menun by id
+    override suspend fun findDayMenu(restaurantId: String, day: LocalDate): DayMenu? {
+       return database.dbQuery {
+           (DayMenuTable innerJoin WeekMenuTable) //Palauttaa vain rivit, joissa on matching values in both tables
+               .selectAll()
+               .where{
+                   (WeekMenuTable.restaurantId eq UUID.fromString(restaurantId)) and
+                           (DayMenuTable.date eq day)
+               }
+               .singleOrNull()
+               ?.toDayMenu()
+
+       }
+    }
+
+    override suspend fun findWeekdayMenu(restaurantId: String, day: String): DayMenu? {
+        return database.dbQuery {
+            (DayMenuTable innerJoin WeekMenuTable) //Palauttaa vain rivit, joissa on matching values in both tables
+                .selectAll()
+                .where{
+                    (WeekMenuTable.restaurantId eq UUID.fromString(restaurantId)) and
+                            (DayMenuTable.weekday eq day)
+                }
+                .singleOrNull()
+                ?.toDayMenu()
+
+        }
+    }
+
+    override suspend fun findDateMenu(restaurantId: String, day: LocalDate): DayMenu? {
+        return database.dbQuery {
+            (DayMenuTable innerJoin WeekMenuTable) //Palauttaa vain rivit, joissa on matching values in both tables
+                .selectAll()
+                .where{
+                    (WeekMenuTable.restaurantId eq UUID.fromString(restaurantId)) and
+                            (DayMenuTable.date eq day)
+                }
+                .singleOrNull()
+                ?.toDayMenu()
+
         }
     }
 
@@ -229,6 +272,15 @@ class RestaurantRepositoryImpl(
     private fun ResultRow.toWeekMenu() = WeekMenu(
         id = this[WeekMenuTable.id].toString(),
         weekStart = this[WeekMenuTable.weekStart]
+    )
+
+    //muutetaan db result DayMenu olioksi
+    private fun ResultRow.toDayMenu() = DayMenu(
+        id = this[DayMenuTable.id].toString(),
+        weekMenuId = this[DayMenuTable.weekMenuId].toString(),
+        date = this[DayMenuTable.date],
+        weekday = this[DayMenuTable.weekday],
+        lunchTime = this[DayMenuTable.lunchTime]
     )
 
     fun String.normalizeFoodName(): String =

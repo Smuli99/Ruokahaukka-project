@@ -1,5 +1,6 @@
 package com.ruokkis.repository
 
+import com.ruokkis.models.DayMenu
 import com.ruokkis.models.NewRestaurantMenu
 import com.ruokkis.models.NewWeekMenu
 import com.ruokkis.models.Restaurant
@@ -19,6 +20,11 @@ interface RestaurantRepository {
     suspend fun existsById(id: UUID): Boolean
     suspend fun findByName(name: String): Restaurant?
     suspend fun findWeekMenu(restaurantId: String, weekStart: LocalDate): WeekMenu?
+
+    suspend fun findWeekdayMenu(restaurantId: String, day: String):DayMenu?
+    suspend fun findDayMenu(restaurantId: String, day: LocalDate): DayMenu?
+
+    suspend fun findDateMenu(restaurantId: String, day: LocalDate): DayMenu?
     suspend fun createWeekMenu(restaurantId: String, menu: NewWeekMenu): String
 
 
