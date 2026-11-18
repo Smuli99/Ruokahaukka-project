@@ -171,6 +171,7 @@ fun Route.configureRestaurantRoutes(
                 // /restaurants/{id}/menu/today
                 get("/today") {
                     // TODO palauttaa tämän päivän menun
+                    // testi
                 }
 
                 // /restaurants/{id}/menu/day/{weekday} esim. ke
