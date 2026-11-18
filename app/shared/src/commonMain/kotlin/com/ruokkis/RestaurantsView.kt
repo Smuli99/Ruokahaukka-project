@@ -123,9 +123,10 @@ val restaurants = listOf(
     Restaurant(2, "Bistro", "10.30 - 13.00", "Restaurant information"),
     Restaurant(3, "Ilokivi", "9.00 - 16.15", "Restaurant information"),
     Restaurant(4, "Lozzi", "10.30 - 18.00", "Restaurant information"),
-    Restaurant(5, "Rentukka", "11.00 - 19.00", "Restaurant information"),
-    Restaurant(6, "Syke", "11.00 - 13.30", "Restaurant information"),
-    Restaurant(7, "Taide", "10.30 - 18.00", "Restaurant information"),
-    Restaurant(8, "Uno", "10.30 - 14.00", "Restaurant information"),
-    Restaurant(9, "Ylistö", "10.30 - 14.30", "Restaurant information")
+    Restaurant(5, "Piato", "10.30 - 16.30", "Restaurant information"),
+    Restaurant(6, "Rentukka", "11.00 - 19.00", "Restaurant information"),
+    Restaurant(7, "Syke", "11.00 - 13.30", "Restaurant information"),
+    Restaurant(8, "Taide", "10.30 - 18.00", "Restaurant information"),
+    Restaurant(9, "Uno", "10.30 - 14.00", "Restaurant information"),
+    Restaurant(10, "Ylistö", "10.30 - 14.30", "Restaurant information")
 )
