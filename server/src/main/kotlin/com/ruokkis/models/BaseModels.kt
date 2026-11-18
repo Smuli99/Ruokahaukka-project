@@ -31,7 +31,8 @@ data class DayMenu(
     val date: LocalDate,
     val weekday: String,
     val lunchTime: String?,
-    val items: List<MenuItem> = emptyList()
+    val items: List<MenuItem> = emptyList(),
+    val weekMenuId: String //lisätty, että JOIN toimii
 )
 
 @Serializable
