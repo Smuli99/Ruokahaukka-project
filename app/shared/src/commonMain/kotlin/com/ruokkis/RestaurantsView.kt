@@ -41,13 +41,14 @@ fun RestaurantsView() {
     val foodListApi = remember { FoodListApi(client) }
 
     var restaurants by remember { mutableStateOf (emptyList<Restaurant>())}
-
+    // Ladatessa data backendiltä pidetään sovellus "lataus" tilassa
     var isLoading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null)}
 
     // Tallennetaan muistiin, mitkä ravintolat ovat suosikkeja (avaimena ravintolan nimi, arvona totuusarvo)
     val favorites = remember { mutableStateMapOf<String, Boolean>() }
 
+    // Tämä avulla ei tarvitse lähettää toista kutsua backendille joka kerta kun ravintola sivulle mennään
     LaunchedEffect(Unit) {
         try {
             restaurants = foodListApi.getRestaurants()
@@ -57,10 +58,6 @@ fun RestaurantsView() {
             isLoading = false
         }
     }
-//    val scope = rememberCoroutineScope()
-//    scope.launch {
-//        restaurants = foodListApi.getRestaurants()
-//    }
 
 
 
@@ -115,6 +112,11 @@ fun RestaurantsView() {
             }
         }
     }
+}
+
+/**
+ *  Tässtä alaspäin turvaan siirrettyä logiikka edellisestä toteutuksesta
+ */
 
 //    if(selectedRestaurant != null) {
 //
@@ -164,7 +166,6 @@ fun RestaurantsView() {
 //    }
 
 
-}
 
 //data class Restaurant(
 //    val id: Int,
