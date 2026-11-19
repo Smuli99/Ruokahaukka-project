@@ -2,18 +2,25 @@ package com.ruokkis
 
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,57 +46,54 @@ fun HomePage() {
     val httpClient = createHttpClient()
     val foodListApi = remember { FoodListApi(httpClient) }
     val scope = rememberCoroutineScope()
-    val piato = remember {mutableStateOf<RestaurantMenu?>(null)}
+    val piato = remember { mutableStateOf<RestaurantMenu?>(null) }
 
-
-
-
-    Scaffold (
-        topBar = {
-           TopBar()
-        },
-
-
-        bottomBar = {
-            BottomBar()
-        },
-
-
-    ){ innerPadding -> //Miksi?
-        Column(
-            modifier = Modifier
-                .padding(innerPadding).verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-
-        ) {
-
-            FilterTagBox() //TODO dynaaminen toteutus
-
-            DayChooserBox() //TODO Riviksi, lisää la + su
-
-            HorizontalDivider(thickness = 2.dp)
-
-            RestaurantCards() //TODO Tee pohja, Hae tiedot
-
-
-
-            Button(onClick = {
-                scope.launch {
-                    piato.value = foodListApi.getWeek("piato")
-                }
-            }) {
-                Text("Get Restaurant")
-            }
-            piato?.let { menu ->
-                Text(menu.toString())
-            }
-        }
-
-
-
-
-
+    // Tallennetaan hakusana tänne, jotta hakua tehdessä voidaan oikeasti filtteröidä ruokia
+    var searchQuery by rememberSaveable {
+        mutableStateOf("")
+    }
+    // Tallennetaan valitut filtterit, jotta voidaan filtteröidä ruokia
+    var selectedFilters by remember {
+        mutableStateOf(setOf<String>())
     }
 
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+
+    ) {
+
+        /**
+         * annetaan filterTagBoxille nämä argumentit, jotta näiden vaikutus saadaan myös muille
+         * jotka riippuvat filtteröinneistä
+         */
+        FilterTagBox(
+            searchQuery = searchQuery,
+            onSearchQueryChange = { searchQuery = it },
+            selectedFilters = selectedFilters,
+            onSelectedFiltersChange = {
+                selectedFilters = it
+            }
+        )
+
+        DayChooserBox() //TODO Riviksi, lisää la + su
+
+        HorizontalDivider(thickness = 2.dp)
+
+        RestaurantCards() //TODO Tee pohja, Hae tiedot
+
+
+        Button(onClick = {
+            scope.launch {
+                piato.value = foodListApi.getWeek("piato")
+            }
+        }) {
+            Text("Get Restaurant")
+        }
+        piato?.let { menu ->
+            Text(menu.toString())
+        }
+    }
 }
