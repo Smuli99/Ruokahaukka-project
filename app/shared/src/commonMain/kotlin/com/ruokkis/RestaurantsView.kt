@@ -32,14 +32,14 @@ import com.ruokkis.dto.Restaurant
 
 @Composable
 @Preview
-fun RestaurantsView() {
+fun RestaurantsView(api: FoodListApi? = null) {
     // tässä vasta tekstinä lopussa jotenkin id:n kautta nimet ja aukioloajat ??
 //    val restaurants = listOf("Belvedere", "Bistro", "Ilokivi", "Lozzi", "Piato", "Rentukka", "Syke", "Taide", "Uno", "Ylistö")
 //    val openingHours = listOf("8.00 - 16.00", "10.30 - 13.00", "9.00 - 16.15", "10.30 - 18.00", "10.30 - 16.30", "11.00 - 19.00", "11.00 - 13.30", "10.30 - 18.00", "10.30 - 14.00", "10.30 - 14.30")
 
-    val client = remember { createHttpClient() }
-    val foodListApi = remember { FoodListApi(client) }
-
+//    val client = remember { createHttpClient() }
+//    val foodListApi = remember { FoodListApi(client) }
+//
     var restaurants by remember { mutableStateOf (emptyList<Restaurant>())}
     // Ladatessa data backendiltä pidetään sovellus "lataus" tilassa
     var isLoading by remember { mutableStateOf(true) }
@@ -49,9 +49,11 @@ fun RestaurantsView() {
     val favorites = remember { mutableStateMapOf<String, Boolean>() }
 
     // Tämä avulla ei tarvitse lähettää toista kutsua backendille joka kerta kun ravintola sivulle mennään
-    LaunchedEffect(Unit) {
+    LaunchedEffect(api) {
         try {
-            restaurants = foodListApi.getRestaurants()
+            if (api != null) {
+                restaurants = api.getRestaurants()
+            }
         } catch (e: Exception) {
             error = e.message
         } finally {
