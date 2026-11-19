@@ -40,11 +40,10 @@ fun RestaurantsView() {
     if(selectedRestaurant != null) {
 
         RestaurantPage(
-
-        restaurant = selectedRestaurant!!,
-        onBack = {
-            selectedRestaurant = null
-        }
+            restaurant = selectedRestaurant!!,
+            onBack = {
+                selectedRestaurant = null
+            }
         )
     } else {
         // pystysuuntainen lista, piirtää alkiot ruudulle
