@@ -25,11 +25,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ruokkis.dto.Restaurant
 
 @Composable
 @Preview
 fun RestaurantPage(
-    restaurant: Restaurant = Restaurant(1, "Belvedere", "8.00 - 16.00", "Restaurant information"), // otetaan vastaan valittu Ravintola (olio)
+    restaurant: Restaurant = Restaurant("1", "Belvedere", "8.00 - 16.00", "Restaurant information"), // otetaan vastaan valittu Ravintola (olio)
     onBack: () -> Unit = {} // Funktio, jota kutsutaan takaisin-napista
 ) {
     // Muuttuja, joka pitää muistissa näytetäänkö päivän (0) vai viikon (1) näkymä
@@ -63,7 +64,8 @@ fun RestaurantPage(
         ) {
             // Ravintolan perustiedot
             Text(
-                text = "Aukioloajat: ${restaurant.openingHours}",
+                text = "",
+//                text = "Aukioloajat: ${restaurant.openingHours}",
                 style = MaterialTheme.typography.bodyLarge
             )
 

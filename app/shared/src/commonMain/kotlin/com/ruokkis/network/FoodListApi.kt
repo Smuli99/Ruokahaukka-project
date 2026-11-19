@@ -1,5 +1,6 @@
 package com.ruokkis.network
 
+import com.ruokkis.dto.Restaurant
 import com.ruokkis.model.DayMenu
 import com.ruokkis.model.RestaurantMenu
 import io.ktor.client.HttpClient
@@ -24,6 +25,15 @@ class FoodListApi(private val client: HttpClient) {
     suspend fun getDay(restaurantId: String, date: String): DayMenu? {
         val response = client.get("/$restaurantId/$date")
         if (response.status == HttpStatusCode.NoContent) return null
+        return response.body()
+    }
+
+    suspend fun getRestaurants(): List<Restaurant> {
+        val response = client.get("/restaurants")
+        println("Response----------------------------")
+        println(response)
+//        println("body--------------------------------")
+//        println(response.body())
         return response.body()
     }
 }

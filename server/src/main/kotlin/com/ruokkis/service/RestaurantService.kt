@@ -43,7 +43,7 @@ class RestaurantService(
         return restaurantRepository.findWeekdayMenu(restaurantId, day)
     }
 
-    suspend fun findDateMenu(restaurantId: String, day: LocalDate): DayMenu? {
+    suspend fun findDateMenu(restaurantId: String, day: String): DayMenu? {
         return restaurantRepository.findWeekdayMenu(restaurantId, day)
     }
 

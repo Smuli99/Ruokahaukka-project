@@ -268,7 +268,7 @@ fun Route.configureRestaurantRoutes(
                         return@get // jotta lähetään pois
                     }
 
-                    val dayMenu = service.findDateMenu(toString(id), LocalDate.parse(date))
+                    val dayMenu = service.findDateMenu(toString(id), date)
 
 
                     if (dayMenu == null) {
