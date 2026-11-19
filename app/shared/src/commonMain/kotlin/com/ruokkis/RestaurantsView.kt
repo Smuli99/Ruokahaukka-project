@@ -82,7 +82,10 @@ fun RestaurantsView() {
             val isFavorite = favorites[restaurant.id] == true
 
             Card(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             ) {
                 Row(
                     modifier = Modifier
@@ -94,7 +97,8 @@ fun RestaurantsView() {
                     Column {
                         Text(
                             text = restaurant.name,
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     IconButton(onClick = {
@@ -133,9 +137,6 @@ fun RestaurantsView() {
 //                    Card(
 //                        onClick = {selectedRestaurant = restaurant},
 //                        modifier = Modifier.fillMaxWidth(),
-//                        colors = CardDefaults.cardColors(
-//                            containerColor = MaterialTheme.colorScheme.surface
-//                        )
 //                    ) {
 //                        Row(
 //                            modifier = Modifier
@@ -149,7 +150,6 @@ fun RestaurantsView() {
 //                            Text(
 //                                text = name.toString(),
 //                                style = MaterialTheme.typography.titleMedium,
-//                                color = MaterialTheme.colorScheme.onSurface
 //                            )
 //                            // Ravintolan aukioloaika (pienempi fontti)
 //                            Text(
