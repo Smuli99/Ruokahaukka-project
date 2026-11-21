@@ -1,6 +1,7 @@
 package com.ruokkis.repository
 
 import com.ruokkis.models.DayMenu
+import com.ruokkis.models.Food
 import com.ruokkis.models.NewRestaurantMenu
 import com.ruokkis.models.NewWeekMenu
 import com.ruokkis.models.Restaurant
@@ -30,6 +31,9 @@ interface RestaurantRepository {
 
      suspend fun findById(id: UUID): Restaurant?
      suspend fun deleteById(id: UUID): Boolean
-//    suspend fun update(restaurant: Restaurant): Restaurant
+     suspend fun updateRestaurant(restaurantId: UUID): Restaurant
 //    suspend fun delete(restaurant: Restaurant): Boolean
+    suspend fun getFoods(): List<Food>
+    suspend fun getFoodById(id: UUID): Food?
+    suspend fun updateFood(id: UUID): Food
 }
