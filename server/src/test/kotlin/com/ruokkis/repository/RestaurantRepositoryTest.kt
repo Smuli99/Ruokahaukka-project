@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import java.util.UUID
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
@@ -62,7 +63,11 @@ class RestaurantRepositoryTest {
         val result = repository.create(newRestaurant)
 
         val expectedResult = Restaurant(
-            id = result.id, name = "Piato", url = "https://example.com/", campus = "Mattilanniemi"
+            id = result.id,
+            name = "Piato",
+            url = "https://example.com/",
+            campus = "Mattilanniemi",
+            favorite = false,
         )
 
         assertEquals(expectedResult, result)
@@ -126,6 +131,20 @@ class RestaurantRepositoryTest {
         }
 
         @Nested
+        inner class UpdateRestaurant {
+
+            @Test
+            fun `restaurants favorite field can be updated`() = runTest {
+                val restaurantToUpdate = assertNotNull(repository.findByName("Piato"))
+                assertFalse(restaurantToUpdate.favorite)
+
+                val updatedRestaurant =
+                    repository.updateRestaurant(UUID.fromString(restaurantToUpdate.id))
+                assertTrue(updatedRestaurant.favorite)
+            }
+        }
+
+        @Nested
         inner class CreateWeekMenu {
 
             @Test
@@ -140,21 +159,20 @@ class RestaurantRepositoryTest {
                 assertEquals(resultId, found.id)
             }
 
-//            kommentin voi poistaa kun mergetty toteutus tälle
-        //    @Test
-//            fun `creating another week menu for a restaurant replaces old one`() = runTest {
-//                val restaurant = assertNotNull(repository.findByName("Ilokivi"))
-//                val weekMenu1 = buildMenu().weekMenu
-//                repository.createWeekMenu(restaurant.id, weekMenu1)
-//
-//                val weekMenu2 = buildMenu(weekStart = LocalDate(2026, 12, 1)).weekMenu
-//                val result = repository.createWeekMenu(restaurant.id, weekMenu2)
-//                val found = assertNotNull(repository.findWeekMenu(restaurant.id, weekMenu2.weekStart))
-//
-//                assertNull(repository.findWeekMenu(restaurant.id, weekMenu1.weekStart))
-//                assertEquals(1, count(WeekMenuTable))
-//                assertEquals(result, found.id)
-//            }
+            @Test
+            fun `creating another week menu for a restaurant replaces old one`() = runTest {
+                val restaurant = assertNotNull(repository.findByName("Ilokivi"))
+                val weekMenu1 = buildMenu().weekMenu
+                repository.createWeekMenu(restaurant.id, weekMenu1)
+
+                val weekMenu2 = buildMenu(weekStart = LocalDate(2026, 12, 1)).weekMenu
+                val result = repository.createWeekMenu(restaurant.id, weekMenu2)
+                val found = assertNotNull(repository.findWeekMenu(restaurant.id, weekMenu2.weekStart))
+
+                assertNull(repository.findWeekMenu(restaurant.id, weekMenu1.weekStart))
+                assertEquals(1, count(WeekMenuTable))
+                assertEquals(result, found.id)
+            }
 
             @Test
             fun `stores days, items, foods, allergies etc`() = runTest {
@@ -180,6 +198,62 @@ class RestaurantRepositoryTest {
 
                 assertEquals(3, count(FoodTable))
                 assertEquals(3, count(AllergyTable))
+            }
+        }
+
+        @Nested
+        inner class WeekMenusInDb {
+
+            @BeforeEach
+            fun setUp() = runTest {
+                val piato = assertNotNull(repository.findByName("Piato"))
+                val weekmenu = buildMenu().weekMenu
+                repository.createWeekMenu(piato.id, weekmenu)
+            }
+
+            @Nested
+            inner class Foods {
+
+                @Test
+                fun `getFoods returns all foods`() = runTest {
+                    val foods = repository.getFoods()
+                    assertEquals(3, foods.size)
+
+                    println (foods)
+                    val names = foods.map { it.name }
+                    assertEquals(listOf("Butter Chicken", "Riisiä", "Kanakeitto"), names)
+                }
+
+                @Nested
+                inner class GetFoodById {
+
+                    @Test
+                    fun `getFoodById returns correct food with valid id`() = runTest {
+                        val foodToGet = repository.getFoods()[0]
+                        val result = repository.getFoodById(UUID.fromString(foodToGet.id))
+                        assertEquals(foodToGet, result)
+                    }
+
+                    @Test
+                    fun `getFoodById returns null with invalid id`() = runTest {
+                        val invalidId = UUID.randomUUID()
+                        val result = repository.getFoodById(invalidId)
+                        assertNull(result)
+                    }
+                }
+
+                @Test
+                fun `updateFood updates foods favorite field`() = runTest {
+                    val foods = repository.getFoods()
+                    val foodToUpdate = foods[0]
+                    assertFalse(foodToUpdate.favorite)
+
+                    var updatedFood = repository.updateFood(UUID.fromString(foodToUpdate.id))
+                    assertTrue(updatedFood.favorite)
+
+                    updatedFood = repository.updateFood(UUID.fromString(foodToUpdate.id))
+                    assertFalse(updatedFood.favorite)
+                }
             }
         }
     }
