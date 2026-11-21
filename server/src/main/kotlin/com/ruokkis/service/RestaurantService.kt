@@ -1,6 +1,7 @@
 package com.ruokkis.service
 
 import com.ruokkis.models.DayMenu
+import com.ruokkis.models.Food
 import com.ruokkis.models.NewRestaurantMenu
 import com.ruokkis.models.Restaurant
 import com.ruokkis.models.WeekMenu
@@ -43,14 +44,29 @@ class RestaurantService(
         return restaurantRepository.findWeekdayMenu(restaurantId, day)
     }
 
-    suspend fun findDateMenu(restaurantId: String, day: LocalDate): DayMenu? {
+    suspend fun findDateMenu(restaurantId: String, day: String): DayMenu? {
         return restaurantRepository.findWeekdayMenu(restaurantId, day)
     }
 
+    suspend fun updateRestaurant(restaurantId: UUID): Restaurant {
+        return restaurantRepository.updateRestaurant(restaurantId)
+    }
 
     // Luodaan uusi ravintola
     suspend fun createRestaurant(restaurant: NewRestaurantMenu): Restaurant? {
         if (restaurantRepository.existsByName(restaurant.name)) return null
         return restaurantRepository.create(restaurant)
+    }
+
+    suspend fun getFoods(): List<Food> {
+        return restaurantRepository.getFoods()
+    }
+
+    suspend fun getFoodById(id: UUID): Food? {
+        return restaurantRepository.getFoodById(id)
+    }
+
+    suspend fun updateFood(id: UUID): Food {
+        return restaurantRepository.updateFood(id)
     }
 }
