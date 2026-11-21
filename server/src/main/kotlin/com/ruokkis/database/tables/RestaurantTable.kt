@@ -6,4 +6,5 @@ object RestaurantTable : UUIDTable("restaurant") {
     val name = varchar("name", 50).uniqueIndex()
     val url = text("url")
     val campus = varchar("campus", 50).nullable()
+    val favorite = bool("favorite").default(false)
 }
