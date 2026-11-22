@@ -65,7 +65,7 @@ data class Food(
 data class Allergy(
     val id: String,
     val tag: String,
-    val nameFi: String
+    val nameFi: String?
 )
 
 data class SyncResult(val restaurant: Restaurant, val weekCreated: Boolean)
