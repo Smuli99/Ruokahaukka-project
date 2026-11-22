@@ -12,8 +12,12 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -27,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ruokkis.dto.Restaurant
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun RestaurantPage(
@@ -69,20 +74,21 @@ fun RestaurantPage(
                 style = MaterialTheme.typography.bodyLarge
             )
 
-            // Painikkeet, joilla vaihdetaan päivä- ja viikkonäkymän välillä
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            // Segmentoitu valitsin päivä- ja viikkonäkymän välille
+            SingleChoiceSegmentedButtonRow(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Button(
-                    onClick = { selectedView = 0 }, // vaihtaa tilaksi 0 (päivä)
-                    modifier = Modifier.weight(1f)
+                SegmentedButton(
+                    selected = selectedView == 0,
+                    onClick = { selectedView = 0 },
+                    shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
                 ) {
                     Text("Päivä")
                 }
-                Button(
-                    onClick = { selectedView = 1 }, // vaihtaa tilaksi 1 (viikko)
-                    modifier = Modifier.weight(1f)
+                SegmentedButton(
+                    selected = selectedView == 1,
+                    onClick = { selectedView = 1 },
+                    shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
                 ) {
                     Text("Viikko")
                 }
@@ -102,7 +108,7 @@ fun RestaurantPage(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         // Mallisisältö
-                        Text("• Tofua ja penneä limonellokastikkeessa\n• Taco broileria\n• Siskonmakkarakeittoa/n• From the table: Pepperoni pinsa")
+                        Text("• Tofua ja penneä limonellokastikkeessa\n• Taco broileria\n• Siskonmakkarakeittoa\n• From the table: Pepperoni pinsa")
                     }
                 }
             } else {
