@@ -127,6 +127,8 @@ fun RestaurantsView(api: FoodListApi? = null) {
     }
 }
 
+
+
 /**
  *  Tässtä alaspäin turvaan siirrettyä logiikka edellisestä toteutuksesta
  */

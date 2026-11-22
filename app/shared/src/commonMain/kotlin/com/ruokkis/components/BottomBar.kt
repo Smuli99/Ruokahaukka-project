@@ -20,6 +20,7 @@ import org.jetbrains.compose.resources.painterResource
 import ruokkis.app.shared.generated.resources.Res
 import ruokkis.app.shared.generated.resources.heart
 import ruokkis.app.shared.generated.resources.home
+import ruokkis.app.shared.generated.resources.restaurant
 
 @Composable
 @Preview
@@ -36,15 +37,27 @@ fun BottomBar(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
-        ){
-            Button(onClick = onFoodsViewClick){
-                Text("Ruoat")
-            }
-
-            Button(onClick = onHomeClick){
+        ) {
+            // 1. Ruoat-nappi
+            Button(onClick = onFoodsViewClick) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
-                ){
+                ) {
+                    Image(
+                        painter = painterResource(Res.drawable.restaurant),
+                        contentDescription = "Foods icon",
+                        modifier = Modifier.size(24.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                    Text("Ruoat")
+                }
+            } // <-- Tässä ensimmäinen nappi sulkeutuu oikein
+
+            // 2. Koti-nappi (nyt omana erillisenä napikseen)
+            Button(onClick = onHomeClick) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Image(
                         painter = painterResource(Res.drawable.home),
                         contentDescription = "Home icon",
@@ -53,13 +66,13 @@ fun BottomBar(
                     )
                     Text("Koti")
                 }
+            } // <-- Tässä toinen nappi sulkeutuu
 
-
-            }
-            Button(onClick = onRestaurantsViewClick){
+            // 3. Ravintolat-nappi (omana erillisenä napikseen)
+            Button(onClick = onRestaurantsViewClick) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
-                ){
+                ) {
                     Image(
                         painter = painterResource(Res.drawable.heart),
                         contentDescription = "Heart",
@@ -68,13 +81,7 @@ fun BottomBar(
                     )
                     Text("Ravintolat")
                 }
-
-
             }
-
         }
-
-
     }
-
 }
