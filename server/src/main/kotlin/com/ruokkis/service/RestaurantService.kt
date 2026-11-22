@@ -1,5 +1,6 @@
 package com.ruokkis.service
 
+import com.ruokkis.models.Allergy
 import com.ruokkis.models.DayMenu
 import com.ruokkis.models.Food
 import com.ruokkis.models.NewRestaurantMenu
@@ -68,5 +69,9 @@ class RestaurantService(
 
     suspend fun updateFood(id: UUID): Food {
         return restaurantRepository.updateFood(id)
+    }
+
+    suspend fun getAllergies(): List<Allergy> {
+        return restaurantRepository.getAllergies()
     }
 }

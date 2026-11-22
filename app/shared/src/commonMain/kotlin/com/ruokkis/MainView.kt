@@ -70,6 +70,7 @@ fun HomePage(api: FoodListApi? = null) {
          * jotka riippuvat filtteröinneistä
          */
         FilterTagBox(
+            api = api,
             searchQuery = searchQuery,
             onSearchQueryChange = { searchQuery = it },
             selectedFilters = selectedFilters,

@@ -1,5 +1,6 @@
 package com.ruokkis.repository
 
+import com.ruokkis.models.Allergy
 import com.ruokkis.models.DayMenu
 import com.ruokkis.models.Food
 import com.ruokkis.models.NewRestaurantMenu
@@ -36,4 +37,5 @@ interface RestaurantRepository {
     suspend fun getFoods(): List<Food>
     suspend fun getFoodById(id: UUID): Food?
     suspend fun updateFood(id: UUID): Food
+    suspend fun getAllergies(): List<Allergy>
 }

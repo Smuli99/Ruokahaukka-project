@@ -16,23 +16,47 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ruokkis.network.FoodListApi
 
 
 @Composable
 @Preview //Jotta tällä tavalla tehdessä preview toimii täytyy antaa default arvot jokaiselle parametrille, mutta nämä ei vaikuta toiminnallisuuteen
 fun FilterTagBox(
+    api: FoodListApi? = null,
     searchQuery: String = "",
     onSearchQueryChange: (String) -> Unit = {},
     selectedFilters: Set<String> = emptySet(),
     onSelectedFiltersChange: (Set<String>) -> Unit = {}
 ){
 
-    val filtersList = listOf("G", "L", "M", "A", "VS", "Veg", "Vl", "MUNATON", "SOIJATON", "VOIMSUOLAI", "LAKTOVEGET",
-                                "ERITTVHG", "VEGAN", "SYDNMERKK", "ILMASTO", "ILM", "SILAINEET", "LAKTOOVOVE", "VRIAINEET")
+    var filters by remember { mutableStateOf<List<String>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
+    var loadFailed by remember { mutableStateOf(false) }
+
+    if (api != null) {
+        LaunchedEffect(api) {
+            isLoading = true
+            loadFailed = false
+            try {
+                filters = api.getAllergies()
+                    .map { it.tag }
+                    .distinct()
+                isLoading = false
+            } catch (error: Exception) {
+                loadFailed = true
+                println(error)
+            }
+        }
+    }
 
     Card(
         colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.primaryContainer),
@@ -46,53 +70,69 @@ fun FilterTagBox(
                 .padding(0.dp, 16.dp, 16.dp),
             textAlign = TextAlign.Center
         )
-        FlowRow(
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(5.dp),
-            verticalArrangement= Arrangement.spacedBy(1.dp)
-        ){
-            for(filter in filtersList) {
-                val selected = filter in selectedFilters
-                FilterChip(
-                    /**
-                     * onClick toiminnallisuuteen lisätty toimintoja, jotta mainview tietää mitkä ovat valittuja
-                     * jotta saadaan oikein filtteröityä ruokia
-                     */
-                    onClick = {
-                        onSelectedFiltersChange(
-                            if (selected) {
-                                selectedFilters - filter
-                            } else {
-                                selectedFilters + filter
-                            }
-                        )
-                    },
-                    label = {Text(filter)},
-                    selected = selected,
-                    colors = FilterChipDefaults.filterChipColors(
 
-                        selectedContainerColor = MaterialTheme.colorScheme.primary,
-                        selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
-
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        labelColor = MaterialTheme.colorScheme.onSurface,
-                        ),
-                    leadingIcon = if (selected) {
-                        {
-                            Icon(
-                                imageVector = Icons.Filled.Done,
-                                contentDescription = "Done icon",
-                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+        when {
+            isLoading -> Text(
+                text = "Ladataan rajauksia...",
+                modifier = Modifier.fillMaxWidth().padding(10.dp),
+                textAlign = TextAlign.Center
+            )
+            loadFailed -> Text(
+                text = "Rajausten lataus epäonnistui",
+                modifier = Modifier.fillMaxWidth().padding(10.dp),
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.error
+            )
+            else -> FlowRow(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                verticalArrangement= Arrangement.spacedBy(1.dp)
+            ) {
+                for(filter in filters) {
+                    val selected = filter in selectedFilters
+                    FilterChip(
+                        /**
+                         * onClick toiminnallisuuteen lisätty toimintoja, jotta mainview tietää mitkä ovat valittuja
+                         * jotta saadaan oikein filtteröityä ruokia
+                         */
+                        onClick = {
+                            onSelectedFiltersChange(
+                                if (selected) {
+                                    selectedFilters - filter
+                                } else {
+                                    selectedFilters + filter
+                                }
                             )
+                        },
+                        label = {Text(filter)},
+                        selected = selected,
+                        colors = FilterChipDefaults.filterChipColors(
+
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            labelColor = MaterialTheme.colorScheme.onSurface,
+                        ),
+                        leadingIcon = if (selected) {
+                            {
+                                Icon(
+                                    imageVector = Icons.Filled.Done,
+                                    contentDescription = "Done icon",
+                                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                                )
+                            }
+                        } else {
+                            null
                         }
-                    } else {
-                        null
-                    }
-                )
+                    )
+                }
             }
+
         }
+
         // Hakukenttä joka pystyy vaikuttamaan RestaurantsCardien sisältöön
         OutlinedTextField(
             value = searchQuery,
