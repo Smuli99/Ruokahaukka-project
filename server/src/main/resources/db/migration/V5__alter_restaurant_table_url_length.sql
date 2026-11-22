@@ -1,0 +1,1 @@
+ALTER TABLE restaurant ALTER COLUMN url TYPE varchar(200);
