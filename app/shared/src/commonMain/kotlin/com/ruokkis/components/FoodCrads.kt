@@ -22,23 +22,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ruokkis.Food
-import com.ruokkis.FoodComponent
+import com.ruokkis.dto.Allergy
+import com.ruokkis.dto.Food
+import com.ruokkis.dto.MenuItem
+import com.ruokkis.dto.MenuItemFood
 
 @Composable
 @Preview
 fun FoodCards(
-    food: Food = Food(
-        id = 0,
-        name = "Example food",
-        components = listOf(
-            FoodComponent("Example component", listOf("L", "G")),
-            FoodComponent("Another component", listOf("A"))
-        )
-    ),
-    selectedFilters: String = "",
+//    menuItem: MenuItem = MenuItem("", "", "", 1,
+//        listOf(MenuItemFood("", Food("", "", "",false), 2,
+//            listOf(Allergy("", "", ""))))
+//    ),
+    food: Food = Food("", "", "", false),
     isFavourite: Boolean = false,
-    onFavouriteClick: () -> Unit = {},
+    onFavouriteClick: (Food) -> Unit = {},
 ) {
    Card(
        modifier = Modifier.fillMaxWidth(),
@@ -56,34 +54,41 @@ fun FoodCards(
                horizontalArrangement = Arrangement.SpaceBetween,
                verticalAlignment = Alignment.CenterVertically
            ) {
-               // Sit ku saadaan backendin dataa kutsuttua frontendiin niin saadaan ruoan kategoria/nimi näytettyä oikein
-               Text(
-                   text = food.name,
-                   style = typography.titleLarge,
-                   color = MaterialTheme.colorScheme.onSurface
-               )
-               Icon(
-                   imageVector = if (isFavourite) {
-                       Icons.Filled.Favorite
-                   } else {
-                       Icons.Outlined.FavoriteBorder
-                   },
-                   contentDescription = "Merkiste lemppariksi",
-                   modifier = Modifier
-                       .clickable { onFavouriteClick() }
-               )
+                FoodRow(
+                    food = food,
+                    isFavourite = isFavourite,
+                    onFavouriteClick = {
+                        onFavouriteClick(food)
+                    }
+                )
+//               // Sit ku saadaan backendin dataa kutsuttua frontendiin niin saadaan ruoan kategoria/nimi näytettyä oikein
+//               Text(
+//                   text = food.name,
+//                   style = typography.titleLarge,
+//                   color = MaterialTheme.colorScheme.onSurface
+//               )
+//               Icon(
+//                   imageVector = if (isFavourite) {
+//                       Icons.Filled.Favorite
+//                   } else {
+//                       Icons.Outlined.FavoriteBorder
+//                   },
+//                   contentDescription = "Merkiste lemppariksi",
+//                   modifier = Modifier
+//                       .clickable { onFavouriteClick() }
+//               )
            }
 
            HorizontalDivider()
 
-           // Tällei voi kutsua sit kun sijottaai noihin esimerkki tekstien tilalle ne backenditlä tulevat oikeat arvot
-           food.components.forEach { component ->
-               FoodRow(
-                   name = component.name,
-                   allergens = component.allergens,
-                   selectedFilters = selectedFilters
-               )
-           }
+//           // Tällei voi kutsua sit kun sijottaai noihin esimerkki tekstien tilalle ne backenditlä tulevat oikeat arvot
+//           food.components.forEach { component ->
+//               FoodRow(
+//                   name = component.name,
+//                   allergens = component.allergens,
+//                   selectedFilters = selectedFilters
+//               )
+//           }
        }
    }
 }
@@ -91,9 +96,11 @@ fun FoodCards(
 @Composable
 @Preview
 fun FoodRow(
-    name: String = "",
-    allergens: List<String> = listOf("", ""),
-    selectedFilters: String = ""
+   food: Food =  Food("", "", "",false),
+    isFavourite: Boolean = food.favorite,
+//   allergies: List<Allergy> = listOf(Allergy("", "", "")),
+//   selectedFilters: List<String> = emptyList(),
+   onFavouriteClick: () -> Unit = {}
     ) {
     Row(
         modifier = Modifier
@@ -102,19 +109,29 @@ fun FoodRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = name, color = MaterialTheme.colorScheme.onSurface)
+        Icon(
+            imageVector = if (isFavourite) {
+                Icons.Filled.Favorite
+            } else {
+                Icons.Outlined.FavoriteBorder
+            },
+            contentDescription = "Merkiste lemppariksi",
+            modifier = Modifier
+                   .clickable { onFavouriteClick() }
+        )
+        Text(text = food.name, color = MaterialTheme.colorScheme.onSurface)
 
-        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            allergens.forEach { allergen ->
-                Text(
-                    text = allergen,
-                    color = if (allergen in selectedFilters) {
-                        Color.Red
-                    } else {
-                        MaterialTheme.colorScheme.onSurface
-                    }
-                )
-            }
-        }
+//        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+//            allergies.forEach { allergy ->
+//                Text(
+//                    text = allergy.tag,
+//                    color = if (allergy.tag in selectedFilters) {
+//                        Color.Red
+//                    } else {
+//                        MaterialTheme.colorScheme.onSurface
+//                    }
+//                )
+//            }
+//        }
     }
 }
