@@ -4,12 +4,12 @@ on:
   push:
     # Tänne myöhemmin main, preMain, backend
     branches:
-      - tests
-      - backend
-      - database
+      - main
+      - preMain
   pull_request:
     branches:
-      - backend
+      - main
+      - preMain
 
 jobs:
   test:
