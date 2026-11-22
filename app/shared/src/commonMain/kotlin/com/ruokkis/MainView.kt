@@ -41,12 +41,12 @@ import kotlinx.coroutines.launch
 
 @Composable
 @Preview
-fun HomePage() {
+fun HomePage(api: FoodListApi? = null) {
 
-    val httpClient = createHttpClient()
-    val foodListApi = remember { FoodListApi(httpClient) }
-    val scope = rememberCoroutineScope()
-    val piato = remember { mutableStateOf<RestaurantMenu?>(null) }
+//    val httpClient = createHttpClient()
+//    val foodListApi = remember { FoodListApi(httpClient) }
+//    val scope = rememberCoroutineScope()
+//    val piato = remember { mutableStateOf<RestaurantMenu?>(null) }
 
     // Tallennetaan hakusana tänne, jotta hakua tehdessä voidaan oikeasti filtteröidä ruokia
     var searchQuery by rememberSaveable {
@@ -85,15 +85,15 @@ fun HomePage() {
         RestaurantCards() //TODO Tee pohja, Hae tiedot
 
 
-        Button(onClick = {
-            scope.launch {
-                piato.value = foodListApi.getWeek("piato")
-            }
-        }) {
-            Text("Get Restaurant")
-        }
-        piato?.let { menu ->
-            Text(menu.toString())
-        }
+//        Button(onClick = {
+//            scope.launch {
+//                piato.value = foodListApi.getWeek("piato")
+//            }
+//        }) {
+//            Text("Get Restaurant")
+//        }
+//        piato?.let { menu ->
+//            Text(menu.toString())
+//        }
     }
 }

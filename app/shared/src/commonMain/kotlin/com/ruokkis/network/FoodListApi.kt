@@ -1,5 +1,6 @@
 package com.ruokkis.network
 
+import com.ruokkis.dto.Restaurant
 import com.ruokkis.model.DayMenu
 import com.ruokkis.model.RestaurantMenu
 import io.ktor.client.HttpClient

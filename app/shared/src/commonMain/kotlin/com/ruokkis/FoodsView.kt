@@ -23,13 +23,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ruokkis.components.FooSelectionButtons
+import com.ruokkis.components.FoodSelectionButtons
 import com.ruokkis.components.FoodCards
+import com.ruokkis.network.FoodListApi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun FoodsView() {
+fun FoodsView(api: FoodListApi? = null) {
 
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var expanded by rememberSaveable { mutableStateOf(false) }

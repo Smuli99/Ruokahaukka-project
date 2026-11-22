@@ -11,10 +11,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.ruokkis.components.BottomBar
 import com.ruokkis.components.TopBar
+import com.ruokkis.network.FoodListApi
+import com.ruokkis.network.createHttpClient
 
 @Composable
 @Preview
 fun App() {
+
+    val httpClient = remember { createHttpClient() }
+
+    DisposableEffect(httpClient) {
+        onDispose {
+            httpClient.close()
+        }
+    }
+
+    val foodListApi = remember { FoodListApi(httpClient) }
+
     MaterialTheme(   colorScheme = AppColors){
         var selectedPage by rememberSaveable {
             mutableStateOf("home")
@@ -39,9 +52,9 @@ fun App() {
                     .fillMaxSize()
             ) {
                 when (selectedPage) {
-                    "home" -> HomePage()
-                    "foods" -> FoodsView()
-                    "restaurants" -> RestaurantsView()
+                    "home" -> HomePage(api = foodListApi)
+                    "foods" -> FoodsView(api = foodListApi)
+                    "restaurants" -> RestaurantsView(api = foodListApi)
 
                 }
             }
