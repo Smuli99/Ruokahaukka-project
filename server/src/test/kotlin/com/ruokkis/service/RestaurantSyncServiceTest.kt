@@ -36,6 +36,7 @@ class RestaurantSyncServiceTest {
         name = "Ilokivi",
         url = menu.url,
         campus = menu.campus,
+        favorite = false,
     )
 
     @BeforeEach

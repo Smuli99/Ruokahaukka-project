@@ -10,6 +10,7 @@ import com.ruokkis.database.tables.MenuItemTable
 import com.ruokkis.database.tables.RestaurantTable
 import com.ruokkis.database.tables.WeekMenuTable
 import com.ruokkis.models.DayMenu
+import com.ruokkis.models.Food
 import com.ruokkis.models.NewRestaurantMenu
 import com.ruokkis.models.NewWeekMenu
 import com.ruokkis.models.Restaurant
@@ -19,10 +20,13 @@ import org.jetbrains.exposed.v1.core.ResultRow
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.lowerCase
+import org.jetbrains.exposed.v1.core.not
 import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.insertAndGetId
+import org.jetbrains.exposed.v1.jdbc.select
 import org.jetbrains.exposed.v1.jdbc.selectAll
+import org.jetbrains.exposed.v1.jdbc.update
 import java.util.UUID
 
 /**
@@ -42,6 +46,7 @@ class RestaurantRepositoryImpl(
                     name = row[RestaurantTable.name],
                     url = row[RestaurantTable.url],
                     campus = row[RestaurantTable.campus],
+                    favorite = row[RestaurantTable.favorite],
                 )
             }
         }
@@ -126,6 +131,7 @@ class RestaurantRepositoryImpl(
                 name = restaurant.name,
                 url = restaurant.url,
                 campus = restaurant.campus,
+                favorite = false,
             )
         }
 
@@ -235,6 +241,61 @@ class RestaurantRepositoryImpl(
         }
     }
 
+    override suspend fun updateRestaurant(restaurantId: UUID): Restaurant {
+        val updatedRows = database.dbQuery {
+            RestaurantTable.update({ RestaurantTable.id eq restaurantId }) {
+                it[favorite] = not(RestaurantTable.favorite)
+            }
+        }
+
+        if (updatedRows == 0) {
+            throw NoSuchElementException("Restaurant not found: $restaurantId")
+        }
+
+        return findById(restaurantId)
+            ?: throw NoSuchElementException("Restaurant not found: $restaurantId")
+    }
+
+    override suspend fun getFoods(): List<Food> {
+        return database.dbQuery {
+            FoodTable.selectAll().map { food ->
+                Food(
+                    id = food[FoodTable.id].toString(),
+                    name = food[FoodTable.name],
+                    normalizedName = food[FoodTable.normalizedName],
+                    favorite = food[FoodTable.favorite],
+                )
+            }
+        }
+    }
+
+    override suspend fun getFoodById(id: UUID): Food? {
+        val food = database.dbQuery {
+            FoodTable
+                .selectAll()
+                .where { FoodTable.id eq id }
+                .singleOrNull()
+        }
+
+        if (food == null) return null
+        return food.toFood()
+    }
+
+    override suspend fun updateFood(id: UUID): Food {
+        val updatedRows = database.dbQuery {
+            FoodTable.update({ FoodTable.id eq id }) {
+                it[favorite] = not(FoodTable.favorite)
+            }
+        }
+
+        if (updatedRows == 0) {
+            throw NoSuchElementException("Food not found: $id")
+        }
+
+        return getFoodById(id)
+            ?: throw NoSuchElementException("Food not found: $id")
+    }
+
     private fun findOrCreateFood(name: String): UUID {
         val normalized = name.normalizeFoodName()
         val existing = FoodTable.selectAll()
@@ -266,6 +327,7 @@ class RestaurantRepositoryImpl(
         name = this[RestaurantTable.name],
         url = this[RestaurantTable.url],
         campus = this[RestaurantTable.campus],
+        favorite = this[RestaurantTable.favorite],
     )
 
     // muunnetaan db result WeekMenu olioksi
@@ -281,6 +343,13 @@ class RestaurantRepositoryImpl(
         date = this[DayMenuTable.date],
         weekday = this[DayMenuTable.weekday],
         lunchTime = this[DayMenuTable.lunchTime]
+    )
+
+    private fun ResultRow.toFood() = Food(
+        id = this[FoodTable.id].toString(),
+        name = this[FoodTable.name],
+        normalizedName = this[FoodTable.normalizedName],
+        favorite = this[FoodTable.favorite],
     )
 
     fun String.normalizeFoodName(): String =

@@ -28,7 +28,8 @@ class FetchingRoutesTest {
         id = UUID.randomUUID().toString(),
         name = "Piato",
         url = "www.example.com",
-        campus = "Mattilanniemi"
+        campus = "Mattilanniemi",
+        favorite = false,
     )
 
     @BeforeEach

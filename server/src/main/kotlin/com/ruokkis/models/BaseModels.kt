@@ -8,7 +8,8 @@ data class Restaurant(
     val id: String,
     val name: String,
     val url: String,
-    val campus: String?
+    val campus: String?,
+    val favorite: Boolean,
 )
 
 // Vastaus endpointille get rafla
@@ -57,6 +58,7 @@ data class Food(
     val id: String,
     val name: String,
     val normalizedName: String,
+    val favorite: Boolean,
 )
 
 @Serializable

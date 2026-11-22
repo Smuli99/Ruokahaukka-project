@@ -6,6 +6,7 @@ import com.ruokkis.models.NewRestaurantMenu
 import com.ruokkis.models.Restaurant
 import com.ruokkis.service.RestaurantService
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.ApplicationCall
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
@@ -25,6 +26,7 @@ import kotlin.time.Clock
 fun Route.configureRestaurantRoutes(
     service: RestaurantService
 ) {
+
     route("/restaurants") {
         get {
             val restaurants = service.getRestaurants()
@@ -72,37 +74,23 @@ fun Route.configureRestaurantRoutes(
 
             //Hakee tietyn ravintolan tiedot tietokannasta id:n perusteella
             get() {
-
-                val idString = call.parameters["id"]
-
-                if (idString == null) {
-                    call.respond(HttpStatusCode.BadRequest, "Id is empty")
-                    return@get
-                }
-
-                val id = try { //Yritetään muuttaa String id UUID muotoon
-                     UUID.fromString(idString) // Muuttaa saadun idn stringistä UUID -> toimii lopuissa
-                }catch (e: IllegalArgumentException) {
-                    call.respond(HttpStatusCode.BadRequest, "Invalid UUID") //Heittää error coce 400 + ton msg käyttäjälle, jso ei toimi
-                    return@get // jotta lähetään pois
-                }
+                val id = call.uuidParam() ?: return@get
 
                 val restaurantInfo = service.findById(id)
-
                 if (restaurantInfo == null) {
                     call.respond(HttpStatusCode.BadRequest, "Restaurant wasnt found")
                     return@get
                 }
 
                 call.respond(restaurantInfo)
-
             }
 
+            // Ravintolan suosikki kentän muokkaus
             put() {
+                val id = call.uuidParam() ?: return@put
 
-                //TODO
-                // update voisi olla hyvä, jos haluaa muuttaa jotakin, kenttää esim campus, jos tyhjä,
-                // voisi ottaa parametrina kentän nimen jota muutetaan, jos ei löydy badRequest
+                val updatedRestaurant = service.updateRestaurant(id)
+                call.respond(HttpStatusCode.OK, updatedRestaurant)
             }
 
 
@@ -268,7 +256,7 @@ fun Route.configureRestaurantRoutes(
                         return@get // jotta lähetään pois
                     }
 
-                    val dayMenu = service.findDateMenu(toString(id), date)
+                    val dayMenu = service.findDateMenu(toString(id), LocalDate.parse(date).toString())
 
 
                     if (dayMenu == null) {
@@ -280,5 +268,49 @@ fun Route.configureRestaurantRoutes(
                 }
             }
         }
+    }
+
+    route("/foods") {
+        get() {
+            val foods = service.getFoods()
+            call.respond(HttpStatusCode.OK, foods)
+        }
+
+        route("/{id}") {
+            get() {
+                val id = call.uuidParam() ?: return@get
+
+                val food = service.getFoodById(id)
+                if (food == null) {
+                    call.respond(HttpStatusCode.BadRequest, "No food found")
+                    return@get
+                }
+
+                call.respond(HttpStatusCode.OK, food)
+            }
+
+            // voidaan muuttaa favorite kenttää
+            put() {
+                val id = call.uuidParam() ?: return@put
+
+                val updatedFood = service.updateFood(id)
+                call.respond(HttpStatusCode.OK, updatedFood)
+            }
+        }
+    }
+}
+
+// Apu funktio, joka ottaa id:n suoraan uuid muodossa (poistaa toistoa)
+private suspend fun ApplicationCall.uuidParam(name: String = "id"): UUID? {
+    val raw = parameters[name]
+    if (raw == null) {
+        respond(HttpStatusCode.BadRequest, "$name is missing")
+        return null
+    }
+    return try {
+        UUID.fromString(raw)
+    } catch (e: IllegalArgumentException) {
+        respond(HttpStatusCode.BadRequest, "Invalid UUID")
+        null
     }
 }
