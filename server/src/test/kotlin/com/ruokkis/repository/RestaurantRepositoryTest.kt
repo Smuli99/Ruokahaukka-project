@@ -255,6 +255,19 @@ class RestaurantRepositoryTest {
                     assertFalse(updatedFood.favorite)
                 }
             }
+
+            @Nested
+            inner class Allergies {
+
+                @Test
+                fun `getAllergies return allergies in database`() = runTest {
+                    val allergies = repository.getAllergies()
+                    assertEquals(3, allergies.size)
+
+                    val tags = allergies.map { it.tag }
+                    assertEquals(listOf("L", "G", "Veg"), tags)
+                }
+            }
         }
     }
 }
