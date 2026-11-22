@@ -8,9 +8,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +33,6 @@ import androidx.compose.ui.unit.sp
 import com.ruokkis.network.FoodListApi
 import com.ruokkis.network.createHttpClient
 import com.ruokkis.dto.Restaurant
-
 @Composable
 @Preview
 fun RestaurantsView(api: FoodListApi? = null) {
@@ -104,10 +107,18 @@ fun RestaurantsView(api: FoodListApi? = null) {
                         // Vaihdetaan tilaa klikatessa (jos oli true -> false, ja toisin päin)
                         favorites[restaurant.id] = !isFavorite
                     }) {
-                        Text(
-                            // Jos on suosikki, näytetään täysi sydän ❤️, jos ei, niin pelkkä 🤍
-                            text = if (isFavorite) "❤️" else "🤍",
-                            fontSize = 20.sp
+                        Icon(
+                            imageVector = if (isFavorite) {
+                                Icons.Filled.Favorite
+                            } else {
+                                Icons.Outlined.FavoriteBorder
+                            },
+                            contentDescription = if (isFavorite) "Poista suosikeista" else "Lisää suosikkeihin",
+                            tint = if (isFavorite) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.onSurface
+                            }
                         )
                     }
                 }
