@@ -38,10 +38,3 @@ data class Food(
     val normalizedName: String,
     val favorite: Boolean,
 )
-
-@Serializable
-data class Allergy(
-    val id: String,
-    val tag: String,
-    val nameFi: String
-)
