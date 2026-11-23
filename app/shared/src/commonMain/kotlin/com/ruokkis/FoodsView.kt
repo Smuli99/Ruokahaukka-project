@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.ruokkis.components.FoodSelectionButtons
 import com.ruokkis.components.FoodCards
 import com.ruokkis.network.FoodListApi
-import com.ruokkis.dto.Food
+import com.ruokkis.model.MenuItemFood
 import kotlin.collections.emptyList
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,8 +44,8 @@ fun FoodsView(api: FoodListApi? = null) {
         mutableStateOf("all")
     }
 
-    var foods by remember {
-        mutableStateOf<List<Food>>(emptyList())
+    var menuItemFoods by remember {
+        mutableStateOf<List<MenuItemFood>>(emptyList())
     }
     // Listaus lempiruoista. Mahdollisesti voidaan käyttää myös oikean datan kanssa vähintään variablea
     var favouriteFoods by rememberSaveable {
@@ -66,10 +66,18 @@ fun FoodsView(api: FoodListApi? = null) {
         }
 
         try {
-            foods = api.getFoods()
+            val restaurantDetails = api.getWeek("5ca12135-2fe9-433b-ae42-f56667f22231")
 
-            favouriteFoods = foods
-                .filter { it.favorite }
+            menuItemFoods = restaurantDetails.weekMenu
+                ?.days
+                ?.flatMap { day ->
+                    day.items.flatMap { menuItem ->
+                        menuItem.foods
+                    }
+                } ?: emptyList()
+
+            favouriteFoods = menuItemFoods
+                .filter { it.food.favorite }
                 .map { it.id }
                 .toSet()
         } catch (e: Exception) {
@@ -80,7 +88,9 @@ fun FoodsView(api: FoodListApi? = null) {
     }
 
     // Ruokien filtteröinti. Peruslogiikka varmaan voidaan käyttä kun yhdistetään database mutta alustavasti testausta varten
-    val filteredFoods = foods.filter { food ->
+    val filteredFoods = menuItemFoods.filter { menuItemFood ->
+
+        val food = menuItemFood.food
 
         val matchesSearch =
             food.name.contains(searchQuery, true)
@@ -115,9 +125,9 @@ fun FoodsView(api: FoodListApi? = null) {
             expanded = expanded,
             onExpandedChange = { expanded = it }
         ) {
-            val suggestions = foods.filter { food ->
-                    food.name.contains(searchQuery, true) &&
-                    (selectedOption == "all" || food.id in favouriteFoods)
+            val suggestions = menuItemFoods.filter { menuItemFood ->
+                    menuItemFood.food.name.contains(searchQuery, true) &&
+                    (selectedOption == "all" || menuItemFood.food.id in favouriteFoods)
                 }
 //                .flatMap { food ->
 //                food.components
@@ -129,13 +139,13 @@ fun FoodsView(api: FoodListApi? = null) {
 //                    }
 //            }
             Column(Modifier.verticalScroll(rememberScrollState())) {
-                suggestions.forEach { food ->
+                suggestions.forEach { menuItemFood ->
                     ListItem(
-                        headlineContent = { Text(food.name) },
+                        headlineContent = { Text(menuItemFood.food.name) },
 //                        supportingContent = { Text(food.name) },
                         modifier = Modifier
                             .clickable {
-                                searchQuery = food.name
+                                searchQuery = menuItemFood.food.name
                                 expanded = false
                             }
                             .fillMaxWidth()
@@ -157,11 +167,12 @@ fun FoodsView(api: FoodListApi? = null) {
                 item {Text("Virhe: $error")}
             }
 
-            items(filteredFoods) { food ->
+            items(filteredFoods) { menuItemFood ->
                 FoodCards(
-                    food = food,
-                    isFavourite = food.id in favouriteFoods,
-                    onFavouriteClick = {
+                    food = menuItemFood.food,
+                    isFavourite = menuItemFood.food.id in favouriteFoods,
+                    allergies = menuItemFood.allegies,
+                    onFavouriteClick = { food ->
                         favouriteFoods = if (food.id in favouriteFoods) {
                             favouriteFoods - food.id
                         } else {

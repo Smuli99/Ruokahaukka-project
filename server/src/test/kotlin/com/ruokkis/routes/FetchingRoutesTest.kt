@@ -1,8 +1,8 @@
 package com.ruokkis.routes
 
 import com.ruokkis.config.RestaurantDataSources
-import com.ruokkis.models.Restaurant
-import com.ruokkis.models.SyncResult
+import com.ruokkis.model.Restaurant
+import com.ruokkis.model.SyncResult
 import com.ruokkis.service.RestaurantSyncService
 import io.ktor.client.call.body
 import io.ktor.client.request.post

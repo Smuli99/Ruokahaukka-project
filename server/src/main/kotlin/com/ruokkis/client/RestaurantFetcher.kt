@@ -3,7 +3,7 @@ package com.ruokkis.client
 import com.ruokkis.config.RestaurantSource
 import com.ruokkis.dto.RestaurantDto
 import com.ruokkis.dto.toRestaurant
-import com.ruokkis.models.NewRestaurantMenu
+import com.ruokkis.model.NewRestaurantMenu
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get

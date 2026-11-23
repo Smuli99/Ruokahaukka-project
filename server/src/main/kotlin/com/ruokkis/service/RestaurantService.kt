@@ -1,11 +1,11 @@
 package com.ruokkis.service
 
-import com.ruokkis.models.Allergy
-import com.ruokkis.models.DayMenu
-import com.ruokkis.models.Food
-import com.ruokkis.models.NewRestaurantMenu
-import com.ruokkis.models.Restaurant
-import com.ruokkis.models.WeekMenu
+import com.ruokkis.model.Allergy
+import com.ruokkis.model.DayMenu
+import com.ruokkis.model.Food
+import com.ruokkis.model.NewRestaurantMenu
+import com.ruokkis.model.Restaurant
+import com.ruokkis.model.WeekMenu
 import com.ruokkis.repository.RestaurantRepository
 import kotlinx.datetime.LocalDate
 import java.util.UUID

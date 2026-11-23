@@ -2,10 +2,10 @@ package com.ruokkis.service
 
 import com.ruokkis.client.RestaurantFetcher
 import com.ruokkis.config.RestaurantSource
-import com.ruokkis.models.NewRestaurantMenu
-import com.ruokkis.models.NewWeekMenu
-import com.ruokkis.models.Restaurant
-import com.ruokkis.models.WeekMenu
+import com.ruokkis.model.NewRestaurantMenu
+import com.ruokkis.model.NewWeekMenu
+import com.ruokkis.model.Restaurant
+import com.ruokkis.model.WeekMenu
 import com.ruokkis.repository.RestaurantRepository
 import io.mockk.coEvery
 import io.mockk.coVerify

@@ -1,10 +1,10 @@
 package com.ruokkis
 
-import com.ruokkis.models.NewDayMenu
-import com.ruokkis.models.NewFood
-import com.ruokkis.models.NewMenuItem
-import com.ruokkis.models.NewRestaurantMenu
-import com.ruokkis.models.NewWeekMenu
+import com.ruokkis.model.NewDayMenu
+import com.ruokkis.model.NewFood
+import com.ruokkis.model.NewMenuItem
+import com.ruokkis.model.NewRestaurantMenu
+import com.ruokkis.model.NewWeekMenu
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus

@@ -2,13 +2,11 @@ package com.ruokkis.service
 
 import com.ruokkis.client.RestaurantFetcher
 import com.ruokkis.config.RestaurantSource
-import com.ruokkis.models.NewRestaurantMenu
-import com.ruokkis.models.Restaurant
-import com.ruokkis.models.SyncResult
+import com.ruokkis.model.Restaurant
+import com.ruokkis.model.SyncResult
 import com.ruokkis.repository.RestaurantRepository
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import java.util.UUID
 
 /**
  * Hoitaa logiikan, verkosta haettavan datan lisäykselle

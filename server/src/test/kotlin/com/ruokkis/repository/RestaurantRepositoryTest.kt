@@ -9,7 +9,7 @@ import com.ruokkis.database.tables.MenuItemFoodTable
 import com.ruokkis.database.tables.MenuItemTable
 import com.ruokkis.database.tables.RestaurantTable
 import com.ruokkis.database.tables.WeekMenuTable
-import com.ruokkis.models.Restaurant
+import com.ruokkis.model.Restaurant
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
 import org.jetbrains.exposed.v1.core.Table

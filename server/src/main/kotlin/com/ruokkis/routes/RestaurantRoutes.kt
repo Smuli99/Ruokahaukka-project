@@ -1,9 +1,7 @@
 package com.ruokkis.routes
 
-import com.ruokkis.database.tables.AllergyTable.id
-import com.ruokkis.models.DayMenu
-import com.ruokkis.models.NewRestaurantMenu
-import com.ruokkis.models.Restaurant
+import com.ruokkis.model.NewRestaurantMenu
+import com.ruokkis.model.Restaurant
 import com.ruokkis.service.RestaurantService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall

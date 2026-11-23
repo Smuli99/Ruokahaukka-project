@@ -14,13 +14,13 @@ data class RestaurantMenu(
     val days: List<DayMenu> = emptyList(),
 )
 
-@Serializable
-data class DayMenu(
-    val date: String, // "YYYY-MM-DD"
-    val weekday: String, // "ma", "ti", "ke", "to", "pe", "la", "su"
-    val lunchTime: String? = null,
-    val meals: List<Meal> = emptyList(),
-)
+//@Serializable
+//data class DayMenu(
+//    val date: String, // "YYYY-MM-DD"
+//    val weekday: String, // "ma", "ti", "ke", "to", "pe", "la", "su"
+//    val lunchTime: String? = null,
+//    val meals: List<Meal> = emptyList(),
+//)
 
 @Serializable
 data class Meal(

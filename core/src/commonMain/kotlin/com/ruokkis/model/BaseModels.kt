@@ -1,4 +1,4 @@
-package com.ruokkis.models
+package com.ruokkis.model
 
 import kotlinx.serialization.Serializable
 import kotlinx.datetime.LocalDate

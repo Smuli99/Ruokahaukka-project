@@ -1,10 +1,10 @@
 package com.ruokkis.network
 
-import com.ruokkis.dto.Allergy
-import com.ruokkis.dto.Restaurant
-import com.ruokkis.dto.Food
+import com.ruokkis.model.Allergy
+import com.ruokkis.model.Restaurant
+import com.ruokkis.model.Food
+import com.ruokkis.model.RestaurantDetails
 import com.ruokkis.model.DayMenu
-import com.ruokkis.model.RestaurantMenu
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -14,7 +14,7 @@ import io.ktor.http.HttpStatusCode
 class FoodListApi(private val client: HttpClient) {
 
     // Koko viikon ruokalista id:nä annettava ravintolan nimi esim. "piato"
-    suspend fun getWeek(restaurantId: String): RestaurantMenu =
+    suspend fun getWeek(restaurantId: String): RestaurantDetails =
         client.get("/${restaurantId}").body()
 
     // Tämän päivän ruokalista

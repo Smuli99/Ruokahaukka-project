@@ -2,21 +2,18 @@ package com.ruokkis
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -30,13 +27,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ruokkis.dto.Restaurant
+import com.ruokkis.model.Restaurant
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun RestaurantPage(
-    restaurant: Restaurant = Restaurant("1", "Belvedere", "8.00 - 16.00", "Restaurant information"), // otetaan vastaan valittu Ravintola (olio)
+    restaurant: Restaurant = Restaurant("1", "Belvedere", "8.00 - 16.00", "Restaurant information", false), // otetaan vastaan valittu Ravintola (olio)
     onBack: () -> Unit = {} // Funktio, jota kutsutaan takaisin-napista
 ) {
     // Muuttuja, joka pitää muistissa näytetäänkö päivän (0) vai viikon (1) näkymä
