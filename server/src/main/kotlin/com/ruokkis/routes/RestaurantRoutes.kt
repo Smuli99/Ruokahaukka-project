@@ -298,6 +298,13 @@ fun Route.configureRestaurantRoutes(
             }
         }
     }
+
+    route("/allergies") {
+        get() {
+            val allergies = service.getAllergies()
+            call.respond(HttpStatusCode.OK, allergies)
+        }
+    }
 }
 
 // Apu funktio, joka ottaa id:n suoraan uuid muodossa (poistaa toistoa)

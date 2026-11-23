@@ -1,5 +1,6 @@
 package com.ruokkis.network
 
+import com.ruokkis.dto.Allergy
 import com.ruokkis.dto.Restaurant
 import com.ruokkis.dto.Food
 import com.ruokkis.model.DayMenu
@@ -58,6 +59,13 @@ class FoodListApi(private val client: HttpClient) {
             throw Error("Could not update food $id")
         }
         return response.body()
+    }
+
+    suspend fun getAllergies(): List<Allergy> {
+        println("Fetching allergies...")
+        val allergies = client.get("/allergies")
+        println("RESPONSE: $allergies")
+        return allergies.body()
     }
 }
 

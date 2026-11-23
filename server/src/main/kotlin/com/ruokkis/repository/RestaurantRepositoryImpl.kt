@@ -9,6 +9,7 @@ import com.ruokkis.database.tables.MenuItemFoodTagTable
 import com.ruokkis.database.tables.MenuItemTable
 import com.ruokkis.database.tables.RestaurantTable
 import com.ruokkis.database.tables.WeekMenuTable
+import com.ruokkis.models.Allergy
 import com.ruokkis.models.DayMenu
 import com.ruokkis.models.Food
 import com.ruokkis.models.NewRestaurantMenu
@@ -296,6 +297,15 @@ class RestaurantRepositoryImpl(
             ?: throw NoSuchElementException("Food not found: $id")
     }
 
+    override suspend fun getAllergies(): List<Allergy> {
+        return database.dbQuery {
+            AllergyTable.selectAll()
+                .map { allergy ->
+                    allergy.toAllergy()
+                }
+        }
+    }
+
     private fun findOrCreateFood(name: String): UUID {
         val normalized = name.normalizeFoodName()
         val existing = FoodTable.selectAll()
@@ -350,6 +360,12 @@ class RestaurantRepositoryImpl(
         name = this[FoodTable.name],
         normalizedName = this[FoodTable.normalizedName],
         favorite = this[FoodTable.favorite],
+    )
+
+    private fun ResultRow.toAllergy() = Allergy(
+        id = this[AllergyTable.id].toString(),
+        tag = this[AllergyTable.tag],
+        nameFi = this[AllergyTable.nameFi]
     )
 
     fun String.normalizeFoodName(): String =
