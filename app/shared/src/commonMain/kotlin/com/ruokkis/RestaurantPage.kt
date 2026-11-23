@@ -27,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ruokkis.dto.Restaurant
@@ -81,14 +82,14 @@ fun RestaurantPage(
                 SegmentedButton(
                     selected = selectedView == 0,
                     onClick = { selectedView = 0 },
-                    shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
+                    shape = RectangleShape
                 ) {
                     Text("Päivä")
                 }
                 SegmentedButton(
                     selected = selectedView == 1,
                     onClick = { selectedView = 1 },
-                    shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
+                    shape = RectangleShape
                 ) {
                     Text("Viikko")
                 }
