@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,17 +28,52 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ruokkis.model.DayMenu
 import com.ruokkis.model.Restaurant
+import com.ruokkis.model.RestaurantDetails
+import com.ruokkis.network.FoodListApi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun RestaurantPage(
     restaurant: Restaurant = Restaurant("1", "Belvedere", "8.00 - 16.00", "Restaurant information", false), // otetaan vastaan valittu Ravintola (olio)
+    api: FoodListApi? = null,
     onBack: () -> Unit = {} // Funktio, jota kutsutaan takaisin-napista
 ) {
     // Muuttuja, joka pitää muistissa näytetäänkö päivän (0) vai viikon (1) näkymä
     var selectedView by remember { mutableStateOf(0) }
+
+    var todayMenu by remember(restaurant.id) {
+        mutableStateOf<DayMenu?>(null)
+    }
+
+    var weekMenu by remember(restaurant.id) {
+        mutableStateOf<RestaurantDetails?>(null)
+    }
+
+    var isLoading by remember {
+        mutableStateOf(true)
+    }
+
+    var error by remember {
+        mutableStateOf<String?>(null)
+    }
+
+    LaunchedEffect(api, restaurant.id) {
+        if (api != null) {
+            try {
+                todayMenu = api.getToday(restaurant.id)
+                weekMenu = api.getWeek(restaurant.id)
+            } catch (e: Exception) {
+                error = e.message
+            } finally {
+                isLoading = false
+            }
+        } else {
+            isLoading = false
+        }
+    }
 
     // Scaffold luo perusrakenteen, jossa mukana yläpalkki (topAppBar)
     Scaffold(

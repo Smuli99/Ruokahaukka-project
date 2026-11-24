@@ -61,62 +61,71 @@ fun RestaurantsView(api: FoodListApi? = null) {
         }
     }
 
-
-
     var selectedRestaurant by remember {
         mutableStateOf<Restaurant?>(null)
     }
 
-    // pystysuuntainen lista, piirtää alkiot ruudulle
-    LazyColumn( // Columnista kevyempi versio
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        items(
-            items = restaurants,
-            key = { it.id }
-        ) { restaurant ->
-            val isFavorite = favorites[restaurant.id] == true
+    if(selectedRestaurant != null) {
 
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+        RestaurantPage(
+            restaurant = selectedRestaurant!!,
+            api = api,
+            onBack = {
+                selectedRestaurant = null
+            },
+        )
+    } else {
+        // pystysuuntainen lista, piirtää alkiot ruudulle
+        LazyColumn( // Columnista kevyempi versio
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(
+                items = restaurants,
+                key = { it.id }
+            ) { restaurant ->
+                val isFavorite = favorites[restaurant.id] == true
+
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface),
+                    onClick = {selectedRestaurant = restaurant}
                 ) {
-                    Column {
-                        Text(
-                            text = restaurant.name,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                    IconButton(onClick = {
-                        // Vaihdetaan tilaa klikatessa (jos oli true -> false, ja toisin päin)
-                        favorites[restaurant.id] = !isFavorite
-                    }) {
-                        Icon(
-                            imageVector = if (isFavorite) {
-                                Icons.Filled.Favorite
-                            } else {
-                                Icons.Outlined.FavoriteBorder
-                            },
-                            contentDescription = if (isFavorite) "Poista suosikeista" else "Lisää suosikkeihin",
-                            tint = if (isFavorite) {
-                                MaterialTheme.colorScheme.primary
-                            } else {
-                                MaterialTheme.colorScheme.onSurface
-                            }
-                        )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text(
+                                text = restaurant.name,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                        IconButton(onClick = {
+                            // Vaihdetaan tilaa klikatessa (jos oli true -> false, ja toisin päin)
+                            favorites[restaurant.id] = !isFavorite
+                        }) {
+                            Icon(
+                                imageVector = if (isFavorite) {
+                                    Icons.Filled.Favorite
+                                } else {
+                                    Icons.Outlined.FavoriteBorder
+                                },
+                                contentDescription = if (isFavorite) "Poista suosikeista" else "Lisää suosikkeihin",
+                                tint = if (isFavorite) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.onSurface
+                                }
+                            )
+                        }
                     }
                 }
             }
