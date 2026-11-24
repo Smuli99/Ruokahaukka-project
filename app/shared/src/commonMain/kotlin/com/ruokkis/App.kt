@@ -1,5 +1,6 @@
 package com.ruokkis
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,6 +21,16 @@ fun App() {
 
     val httpClient = remember { createHttpClient() }
 
+    var selectedTheme by rememberSaveable {
+        mutableStateOf(AppTheme.SYSTEM)
+    }
+
+    val darkTheme = when (selectedTheme) {
+        AppTheme.LIGHT -> false
+        AppTheme.DARK -> true
+        AppTheme.SYSTEM -> isSystemInDarkTheme()
+    }
+
     DisposableEffect(httpClient) {
         onDispose {
             httpClient.close()
@@ -28,14 +39,19 @@ fun App() {
 
     val foodListApi = remember { FoodListApi(httpClient) }
 
-    MaterialTheme(   colorScheme = AppColors){
+    MaterialTheme(
+        colorScheme = if (darkTheme) AppColorsDark else AppColors
+    ){
         var selectedPage by rememberSaveable {
             mutableStateOf("home")
         }
 
         Scaffold(
             topBar = {
-                TopBar()
+                TopBar(
+                    selectedTheme = selectedTheme,
+                    onThemeChange = { selectedTheme = it}
+                )
             },
             bottomBar = {
                 BottomBar(
@@ -60,4 +76,10 @@ fun App() {
             }
         }
     }
+}
+
+enum class AppTheme {
+    LIGHT,
+    DARK,
+    SYSTEM
 }
