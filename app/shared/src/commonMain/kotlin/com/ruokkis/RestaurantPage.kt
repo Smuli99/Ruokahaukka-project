@@ -32,6 +32,11 @@ import com.ruokkis.model.DayMenu
 import com.ruokkis.model.Restaurant
 import com.ruokkis.model.RestaurantDetails
 import com.ruokkis.network.FoodListApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.Alignment
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -128,36 +133,147 @@ fun RestaurantPage(
                 }
             }
 
-            // Näytetään sisältö sen mukaan onko valittu viikko vai päivä
-            if (selectedView == 0) {
-                // Mallina RestaurantCards -haaran ruokakortit
-                Card(
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                    modifier = Modifier
-                        .wrapContentHeight()
-                        .fillMaxWidth()
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(text = "Tämän päivän lounaat", style = MaterialTheme.typography.titleMedium)
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        // Mallisisältö
-                        Text("• Tofua ja penneä limonellokastikkeessa\n• Taco broileria\n• Siskonmakkarakeittoa\n• From the table: Pepperoni pinsa")
+            // Näytetään sisältö sen mukaan ladataanko, onko virhe vai mikä näkymä on valittu
+            when {
+                isLoading -> {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
                     }
                 }
-            } else {
-                // Viikkonäkymä
-                Card(
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(text = "Koko viikon ruokalista", style = MaterialTheme.typography.titleMedium)
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("Maanantai – Perjantai: Vaihtuvia lounaita.")
+                error != null -> {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Virhe: $error", color = MaterialTheme.colorScheme.error)
+                    }
+                }
+                selectedView == 0 -> {
+                    // Päivänäkymä
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .fillMaxWidth()
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(text = "Tämän päivän lounas", style = MaterialTheme.typography.titleMedium)
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            if (todayMenu == null || todayMenu?.items.isNullOrEmpty()) {
+                                Text("Ei lounastietoja tälle päivälle.")
+                            } else {
+                                todayMenu?.items?.forEach { menuItem ->
+                                    Column(modifier = Modifier.padding(vertical = 4.dp)) {
+                                        menuItem.foods.forEach { foodItem ->
+                                            Text("• ${foodItem.food.name}")
+                                        }
+                                        if (!menuItem.price.isNullOrEmpty()) {
+                                            Text(
+                                                text = "Hinta: ${menuItem.price}",
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.secondary
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else -> {
+                    // Viikkonäkymä
+                    val days = weekMenu?.weekMenu?.days
+
+                    if (days.isNullOrEmpty()) {
+                        Card(
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text(text = "Ei viikoittaista ruokalistaa saatavilla.")
+                            }
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(days) { day ->
+                                Card(
+                                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Column(modifier = Modifier.padding(12.dp)) {
+                                        Text(
+                                            text = "${day.weekday} (${day.date})",
+                                            style = MaterialTheme.typography.titleSmall
+                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+
+                                        if (day.items.isEmpty()) {
+                                            Text("Ei ruokalistaa", style = MaterialTheme.typography.bodySmall)
+                                        } else {
+                                            day.items.forEach { menuItem ->
+                                                Column(modifier = Modifier.padding(vertical = 2.dp)) {
+                                                    menuItem.foods.forEach { foodItem ->
+                                                        Text("• ${foodItem.food.name}", style = MaterialTheme.typography.bodyMedium)
+                                                    }
+                                                    if (!menuItem.price.isNullOrEmpty()) {
+                                                        Text(
+                                                            text = "menuItem.price", // menuItem.pricen VIRHE PITÄÄ KORJATa tarkoituksena "":lla
+                                                            style = MaterialTheme.typography.bodySmall,
+                                                            color = MaterialTheme.colorScheme.secondary
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
+
+
+
+            // Näytetään sisältö sen mukaan onko valittu viikko vai päivä
+           // if (selectedView == 0) {
+                // Mallina RestaurantCards -haaran ruokakortit
+               // Card(
+                   // colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                    // modifier = Modifier
+                   //     .wrapContentHeight()
+                 //       .fillMaxWidth()
+               // ) {
+                    // Column(modifier = Modifier.padding(16.dp)) {
+                      //  Text(text = "Tämän päivän lounaat", style = MaterialTheme.typography.titleMedium)
+                    //    Spacer(modifier = Modifier.height(8.dp))
+
+                        // Mallisisältö
+                  //      Text("• Tofua ja penneä limonellokastikkeessa\n• Taco broileria\n• Siskonmakkarakeittoa\n• From the table: Pepperoni pinsa")
+                //    }
+              //  }
+            //} else {
+                // Viikkonäkymä
+                //Card(
+                    //colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                  //  modifier = Modifier.fillMaxWidth()
+                //) {
+                    //Column(modifier = Modifier.padding(16.dp)) {
+                       // Text(text = "Koko viikon ruokalista", style = MaterialTheme.typography.titleMedium)
+                     //   Spacer(modifier = Modifier.height(8.dp))
+                   //     Text("Maanantai – Perjantai: Vaihtuvia lounaita.")
+                  //  }
+               //  }
+            // }
         }
     }
 }
