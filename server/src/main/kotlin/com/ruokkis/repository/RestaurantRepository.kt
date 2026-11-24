@@ -24,7 +24,7 @@ interface RestaurantRepository {
     suspend fun existsByName(name: String): Boolean
     suspend fun existsById(id: UUID): Boolean
     suspend fun findByName(name: String): Restaurant?
-    suspend fun findWeekMenu(restaurantId: String): WeekMenu?
+    suspend fun findWeekMenu(restaurantId: UUID): WeekMenu?
 
     suspend fun findWeekdayMenu(restaurantId: String, day: String):DayMenu?
     suspend fun findDayMenu(restaurantId: String, day: LocalDate): DayMenu?

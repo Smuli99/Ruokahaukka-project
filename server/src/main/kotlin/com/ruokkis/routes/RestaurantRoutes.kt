@@ -129,28 +129,8 @@ fun Route.configureRestaurantRoutes(
             route("/menu") {
 
                 get() {
-
-                    val idString = call.parameters["id"]
-
-                    if (idString == null) {
-                        call.respond(HttpStatusCode.BadRequest, "Id is empty")
-                        return@get
-                    }
-
-                    val id = try { //Yritetään muuttaa String id UUID muotoon
-                        UUID.fromString(idString) // Muuttaa saadun idn stringistä UUID -> toimii lopuissa
-                    }catch (e: IllegalArgumentException) {
-                        call.respond(HttpStatusCode.BadRequest, "Invalid UUID") //Heittää error coce 400 + ton msg käyttäjälle, jso ei toimi
-                        return@get // jotta lähetään pois
-                    }
-
-
-                    val localDate = Clock.System.todayIn(TimeZone.currentSystemDefault()) //LocalDare on erimuoto? Ei käy, eikä javanomakaa, ent tiiä onks tää järkevin
-
-                   //Muutettu id to String, alkuperänen käytti UUID, mut findWeekMenua käyttää nii moni et tää on helpompi korjata
-                    //En tiiä kannattaisko toi olemassaolon chekkaus muuttaa, mut toimii nii antaa olla?
-                    val weekMenu = service.findWeekMenu(toString(id), localDate) //return WeekMenu
-
+                    val uuid = call.uuidParam() ?: return@get
+                    val weekMenu = service.findWeekMenu(uuid)
 
                     if (weekMenu == null) {
                         call.respond(HttpStatusCode.BadRequest, "Menu wasnt found")
