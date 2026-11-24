@@ -6,6 +6,7 @@ import com.ruokkis.model.Food
 import com.ruokkis.model.NewRestaurantMenu
 import com.ruokkis.model.NewWeekMenu
 import com.ruokkis.model.Restaurant
+import com.ruokkis.model.RestaurantDetails
 import com.ruokkis.model.WeekMenu
 import kotlinx.datetime.LocalDate
 import java.util.UUID
@@ -16,15 +17,18 @@ import java.util.UUID
  * esim. lisätään uusi ravintola, haetaan kaikki ravintolat, haetaan ravintolan viikkolista jne.
  */
 interface RestaurantRepository {
-    suspend fun findAll(): List<Restaurant>
+    suspend fun getRestaurants(): List<Restaurant>
+    suspend fun getRestaurantsDetails(): List<RestaurantDetails>
+    suspend fun getRestaurantDetails(id: UUID): RestaurantDetails?
     suspend fun create(restaurant: NewRestaurantMenu): Restaurant
     suspend fun existsByName(name: String): Boolean
     suspend fun existsById(id: UUID): Boolean
     suspend fun findByName(name: String): Restaurant?
-    suspend fun findWeekMenu(restaurantId: String, weekStart: LocalDate): WeekMenu?
+    suspend fun findWeekMenu(restaurantId: String): WeekMenu?
 
     suspend fun findWeekdayMenu(restaurantId: String, day: String):DayMenu?
     suspend fun findDayMenu(restaurantId: String, day: LocalDate): DayMenu?
+    suspend fun findDayMenus(weekMenuId: UUID): List<DayMenu>
 
     suspend fun findDateMenu(restaurantId: String, day: LocalDate): DayMenu?
     suspend fun createWeekMenu(restaurantId: String, menu: NewWeekMenu): String

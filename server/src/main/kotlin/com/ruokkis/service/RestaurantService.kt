@@ -21,7 +21,7 @@ class RestaurantService(
 ) {
     // Haetaan kaikki ravintolat tietokannasta
     suspend fun getRestaurants(): List<Restaurant> {
-        return restaurantRepository.findAll()
+        return restaurantRepository.getRestaurants()
     }
 
 

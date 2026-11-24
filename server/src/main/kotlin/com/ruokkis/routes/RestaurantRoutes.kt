@@ -31,6 +31,15 @@ fun Route.configureRestaurantRoutes(
             call.respond(restaurants)
         }
 
+        get("/details") {
+            try {
+                val restaurants = service.getRestaurantsDetails()
+                call.respond(HttpStatusCode.OK, restaurants)
+            } catch (e: Exception) {
+                println(e.toString())
+            }
+        }
+
         post {
             val restaurantData = call.receive<NewRestaurantMenu>()
 

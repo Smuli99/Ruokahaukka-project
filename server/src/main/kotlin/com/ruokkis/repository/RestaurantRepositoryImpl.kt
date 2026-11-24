@@ -15,6 +15,7 @@ import com.ruokkis.model.Food
 import com.ruokkis.model.NewRestaurantMenu
 import com.ruokkis.model.NewWeekMenu
 import com.ruokkis.model.Restaurant
+import com.ruokkis.model.RestaurantDetails
 import com.ruokkis.model.WeekMenu
 import kotlinx.datetime.LocalDate
 import org.jetbrains.exposed.v1.core.ResultRow
@@ -38,7 +39,7 @@ class RestaurantRepositoryImpl(
 ) : RestaurantRepository {
 
     // toteutus ravintoloiden hakuun tietokannasta
-    override suspend fun findAll(): List<Restaurant> =
+    override suspend fun getRestaurants(): List<Restaurant> =
         database.dbQuery {
             RestaurantTable.selectAll().map { row ->
                 Restaurant(
@@ -50,6 +51,24 @@ class RestaurantRepositoryImpl(
                 )
             }
         }
+
+    override suspend fun getRestaurantsDetails(): List<RestaurantDetails> {
+        val restaurants = getRestaurants()
+
+        restaurants.map { restaurant ->
+            val weekMenu = findWeekMenu(restaurant.id)
+        }
+
+    }
+
+    override suspend fun getRestaurantDetails(id: UUID): RestaurantDetails? {
+        val restaurant = findById(id)
+        if (restaurant == null) return null
+
+        val weekMenu = findWeekMenu(restaurant.id)
+        weekMenu?.copy( days = )
+
+    }
 
     // Tarkistetaan löytyykö ravintola jo tietokannasta nimen perusteella, jos löytyy paluttaa true
     override suspend fun existsByName(name: String): Boolean =
@@ -184,13 +203,12 @@ class RestaurantRepositoryImpl(
         }
 
 
-    override suspend fun findWeekMenu(restaurantId: String, weekStart: LocalDate): WeekMenu? {
+    override suspend fun findWeekMenu(restaurantId: String): WeekMenu? {
         return database.dbQuery {
             WeekMenuTable
                 .selectAll()
                 .where {
-                    (WeekMenuTable.restaurantId eq UUID.fromString(restaurantId)) and
-                    (WeekMenuTable.weekStart eq weekStart)
+                    (WeekMenuTable.restaurantId eq UUID.fromString(restaurantId))
                 }
                 .singleOrNull()
                 ?.toWeekMenu()
@@ -211,6 +229,16 @@ class RestaurantRepositoryImpl(
                ?.toDayMenu()
 
        }
+    }
+
+    override suspend fun findDayMenus(weekMenuId: UUID): List<DayMenu> {
+        return database.dbQuery {
+            DayMenuTable.selectAll()
+                .where { DayMenuTable.weekMenuId eq weekMenuId }
+                .map { day ->
+                    day.toDayMenu()
+                }
+        }
     }
 
     override suspend fun findWeekdayMenu(restaurantId: String, day: String): DayMenu? {
@@ -342,7 +370,7 @@ class RestaurantRepositoryImpl(
     // muunnetaan db result WeekMenu olioksi
     private fun ResultRow.toWeekMenu() = WeekMenu(
         id = this[WeekMenuTable.id].toString(),
-        weekStart = this[WeekMenuTable.weekStart]
+        weekStart = this[WeekMenuTable.weekStart],
     )
 
     //muutetaan db result DayMenu olioksi
