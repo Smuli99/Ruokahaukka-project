@@ -124,7 +124,7 @@ fun RestaurantPage(
                 ) {
                     Text("Päivä")
                 }
-                SegmentedButton(
+                gitSegmentedButton(
                     selected = selectedView == 1,
                     onClick = { selectedView = 1 },
                     shape = RectangleShape
@@ -224,9 +224,10 @@ fun RestaurantPage(
                                                     menuItem.foods.forEach { foodItem ->
                                                         Text("• ${foodItem.food.name}", style = MaterialTheme.typography.bodyMedium)
                                                     }
-                                                    if (!menuItem.price.isNullOrEmpty()) {
+                                                    val currentPrice = menuItem.price
+                                                    if (!currentPrice.isNullOrEmpty()) {
                                                         Text(
-                                                            text = "menuItem.price", // menuItem.pricen VIRHE PITÄÄ KORJATa tarkoituksena "":lla
+                                                            text = currentPrice,
                                                             style = MaterialTheme.typography.bodySmall,
                                                             color = MaterialTheme.colorScheme.secondary
                                                         )
