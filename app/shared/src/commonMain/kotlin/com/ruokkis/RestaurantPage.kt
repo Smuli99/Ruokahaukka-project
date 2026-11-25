@@ -124,7 +124,7 @@ fun RestaurantPage(
                 ) {
                     Text("Päivä")
                 }
-                gitSegmentedButton(
+                SegmentedButton(
                     selected = selectedView == 1,
                     onClick = { selectedView = 1 },
                     shape = RectangleShape
